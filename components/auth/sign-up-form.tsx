@@ -1,13 +1,16 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
-import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
+import { signUp } from '@/lib/auth-client';
+import { callback_url } from '@/lib/auth/constants';
 import { signUpSchema } from '@/lib/utils/schema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { EyeIcon, EyeOffIcon, Loader2 } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { toast } from 'sonner';
 import { z } from 'zod';
 import {
 	Form,
@@ -23,6 +26,9 @@ import SocialLogin from './social-login';
 export default function SignUpForm() {
 	const [showPassword, setShowPassword] = useState(false);
 	const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+	const [loading, setLoading] = useState(false);
+
+	const router = useRouter();
 
 	const form = useForm<z.infer<typeof signUpSchema>>({
 		resolver: zodResolver(signUpSchema),
@@ -31,12 +37,33 @@ export default function SignUpForm() {
 			email: '',
 			password: '',
 			confirmPassword: '',
-			rememberMe: false,
 		},
 	});
 
 	const onSubmit = async (values: z.infer<typeof signUpSchema>) => {
-		console.log(values);
+		await signUp.email({
+			email: values.email,
+			password: values.password,
+			name: values.username,
+			callbackURL: callback_url,
+			fetchOptions: {
+				onResponse: () => {
+					setLoading(false);
+				},
+				onRequest: () => {
+					setLoading(true);
+				},
+				onError: (ctx) => {
+					toast.error('Error signing up', {
+						description: ctx.error.message,
+					});
+				},
+				onSuccess: () => {
+					toast.success('Signed up successfully');
+					router.push(callback_url);
+				},
+			},
+		});
 	};
 
 	return (
@@ -164,31 +191,11 @@ export default function SignUpForm() {
 					)}
 				/>
 
-				<FormField
-					control={form.control}
-					name='rememberMe'
-					render={({ field }) => (
-						<FormItem className='flex flex-row items-center'>
-							<FormControl>
-								<Checkbox
-									checked={field.value}
-									onCheckedChange={field.onChange}
-								/>
-							</FormControl>
-							<FormLabel>Remember me</FormLabel>
-						</FormItem>
-					)}
-				/>
-
 				<Button
 					type='submit'
 					className='w-full'
-					disabled={form.formState.isLoading}>
-					{form.formState.isLoading ? (
-						<Loader2 className='animate-spin' />
-					) : (
-						'Sign Up'
-					)}
+					disabled={loading}>
+					{loading ? <Loader2 className='animate-spin' /> : 'Sign Up'}
 				</Button>
 
 				<SocialLogin />

@@ -1,14 +1,6 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
-import { Checkbox } from '@/components/ui/checkbox';
-import { Input } from '@/components/ui/input';
-import { signInSchema } from '@/lib/utils/schema';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { EyeIcon, EyeOffIcon, Loader2 } from 'lucide-react';
-import { useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { z } from 'zod';
 import {
 	Form,
 	FormControl,
@@ -16,23 +8,56 @@ import {
 	FormItem,
 	FormLabel,
 	FormMessage,
-} from '../ui/form';
+} from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
+import { signIn } from '@/lib/auth-client';
+import { callback_url } from '@/lib/auth/constants';
+import { signInSchema } from '@/lib/utils/schema';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { EyeIcon, EyeOffIcon, Loader2 } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { toast } from 'sonner';
+import { z } from 'zod';
 import SocialLogin from './social-login';
 
 export default function SignInForm() {
 	const [showPassword, setShowPassword] = useState(false);
+	const [loading, setLoading] = useState(false);
+	const router = useRouter();
 
 	const form = useForm<z.infer<typeof signInSchema>>({
 		resolver: zodResolver(signInSchema),
 		defaultValues: {
 			email: '',
 			password: '',
-			rememberMe: false,
 		},
 	});
 
 	const onSubmit = async (values: z.infer<typeof signInSchema>) => {
-		console.log(values);
+		await signIn.email({
+			email: values.email,
+			password: values.password,
+			callbackURL: callback_url,
+			fetchOptions: {
+				onResponse: () => {
+					setLoading(false);
+				},
+				onRequest: () => {
+					setLoading(true);
+				},
+				onError: (ctx) => {
+					toast.error('Error signing...', {
+						description: ctx.error.message,
+					});
+				},
+				onSuccess: () => {
+					toast.success('Signed in');
+					router.push(callback_url);
+				},
+			},
+		});
 	};
 
 	return (
@@ -99,31 +124,11 @@ export default function SignInForm() {
 					)}
 				/>
 
-				<FormField
-					control={form.control}
-					name='rememberMe'
-					render={({ field }) => (
-						<FormItem className='flex flex-row items-center'>
-							<FormControl>
-								<Checkbox
-									checked={field.value}
-									onCheckedChange={field.onChange}
-								/>
-							</FormControl>
-							<FormLabel>Remember me</FormLabel>
-						</FormItem>
-					)}
-				/>
-
 				<Button
 					type='submit'
 					className='w-full'
-					disabled={form.formState.isLoading}>
-					{form.formState.isLoading ? (
-						<Loader2 className='animate-spin' />
-					) : (
-						'Sign Up'
-					)}
+					disabled={loading}>
+					{loading ? <Loader2 className='animate-spin' /> : 'Sign Up'}
 				</Button>
 
 				<SocialLogin />

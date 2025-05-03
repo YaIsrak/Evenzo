@@ -1,4 +1,5 @@
 import SignInForm from '@/components/auth/sign-in-form';
+import { signup_url } from '@/lib/auth/constants';
 import Image from 'next/image';
 import Link from 'next/link';
 
@@ -25,7 +26,7 @@ export default function SignInPage() {
 				<p className='text-xs md:text-sm text-muted-foreground text-center'>
 					Don&apos;t have an account?{' '}
 					<Link
-						href='/sign-up'
+						href={signup_url}
 						className='text-primary hover:underline'>
 						Sign Up
 					</Link>

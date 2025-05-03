@@ -1,6 +1,6 @@
+import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import Image from 'next/image';
-import { Button } from '../ui/button';
 
 export default function SocialLogin() {
 	return (
