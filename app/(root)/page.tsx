@@ -1,131 +1,41 @@
+import SignedIn from '@/components/auth/signed-in';
+import EventCard from '@/components/EventCard';
+import EventPagination from '@/components/EventPagination';
+import { Button } from '@/components/ui/button';
+import { PlusIcon } from 'lucide-react';
+import Link from 'next/link';
+
 export default function MainPage() {
 	return (
-		<div>
-			<div className='h-screen'>
-				Lorem ipsum dolor sit amet consectetur adipisicing elit. Qui
-				temporibus ratione voluptas corporis cum laudantium illum ea alias
-				eveniet amet quisquam debitis possimus, ullam sed doloribus labore
-				deleniti perspiciatis distinctio minus deserunt doloremque. Nam
-				veniam, enim eveniet cumque sit modi eius? Adipisci modi, aliquam
-				delectus dolores sint necessitatibus incidunt ea! Cupiditate est
-				neque, atque omnis perspiciatis amet numquam ratione, recusandae
-				laborum corrupti facilis nihil dolores totam delectus nulla saepe
-				eveniet voluptatum aperiam voluptatibus. Veniam iusto eaque illum
-				tempore molestias autem. Saepe animi voluptatem molestiae,
-				exercitationem hic eos molestias ipsam ipsa earum dolore nemo nihil
-				voluptate illum ab ducimus debitis repellat ex a repellendus!
-				Blanditiis maxime aliquam nihil molestiae repudiandae laborum vero
-				nesciunt atque iusto excepturi iste ex labore harum et eos, aperiam
-				quasi eaque, animi obcaecati consectetur ipsam. Placeat reiciendis
-				laboriosam perspiciatis id voluptatem facere quae doloremque
-				praesentium. Esse nam numquam enim, unde quas cum porro facere eos
-				aperiam ipsa. Delectus quis nemo reiciendis hic! Minima dignissimos
-				corporis quis consequatur saepe, laudantium distinctio natus
-				similique ullam velit, assumenda, a tempora. Sequi nostrum eum sit
-				porro eaque. Veniam exercitationem voluptate ullam eligendi
-				molestiae repudiandae totam eius autem earum, at quam nemo aliquam
-				tempore quidem architecto maxime magni ipsa aliquid doloribus id?
+		<div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-8'>
+			<SignedIn>
+				<div className='flex justify-end'>
+					<Button
+						size='sm'
+						asChild>
+						<Link href='/create'>
+							<PlusIcon className='size-4' />
+							Create Event
+						</Link>
+					</Button>
+				</div>
+			</SignedIn>
+
+			{/* Event grid */}
+			<div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4'>
+				<EventCard />
+				<EventCard />
+				<EventCard />
+				<EventCard />
+				<EventCard />
+				<EventCard />
 			</div>
-			<div className='h-screen'>
-				Lorem ipsum dolor sit amet consectetur adipisicing elit. Qui
-				temporibus ratione voluptas corporis cum laudantium illum ea alias
-				eveniet amet quisquam debitis possimus, ullam sed doloribus labore
-				deleniti perspiciatis distinctio minus deserunt doloremque. Nam
-				veniam, enim eveniet cumque sit modi eius? Adipisci modi, aliquam
-				delectus dolores sint necessitatibus incidunt ea! Cupiditate est
-				neque, atque omnis perspiciatis amet numquam ratione, recusandae
-				laborum corrupti facilis nihil dolores totam delectus nulla saepe
-				eveniet voluptatum aperiam voluptatibus. Veniam iusto eaque illum
-				tempore molestias autem. Saepe animi voluptatem molestiae,
-				exercitationem hic eos molestias ipsam ipsa earum dolore nemo nihil
-				voluptate illum ab ducimus debitis repellat ex a repellendus!
-				Blanditiis maxime aliquam nihil molestiae repudiandae laborum vero
-				nesciunt atque iusto excepturi iste ex labore harum et eos, aperiam
-				quasi eaque, animi obcaecati consectetur ipsam. Placeat reiciendis
-				laboriosam perspiciatis id voluptatem facere quae doloremque
-				praesentium. Esse nam numquam enim, unde quas cum porro facere eos
-				aperiam ipsa. Delectus quis nemo reiciendis hic! Minima dignissimos
-				corporis quis consequatur saepe, laudantium distinctio natus
-				similique ullam velit, assumenda, a tempora. Sequi nostrum eum sit
-				porro eaque. Veniam exercitationem voluptate ullam eligendi
-				molestiae repudiandae totam eius autem earum, at quam nemo aliquam
-				tempore quidem architecto maxime magni ipsa aliquid doloribus id?
-			</div>
-			<div className='h-screen'>
-				Lorem ipsum dolor sit amet consectetur adipisicing elit. Qui
-				temporibus ratione voluptas corporis cum laudantium illum ea alias
-				eveniet amet quisquam debitis possimus, ullam sed doloribus labore
-				deleniti perspiciatis distinctio minus deserunt doloremque. Nam
-				veniam, enim eveniet cumque sit modi eius? Adipisci modi, aliquam
-				delectus dolores sint necessitatibus incidunt ea! Cupiditate est
-				neque, atque omnis perspiciatis amet numquam ratione, recusandae
-				laborum corrupti facilis nihil dolores totam delectus nulla saepe
-				eveniet voluptatum aperiam voluptatibus. Veniam iusto eaque illum
-				tempore molestias autem. Saepe animi voluptatem molestiae,
-				exercitationem hic eos molestias ipsam ipsa earum dolore nemo nihil
-				voluptate illum ab ducimus debitis repellat ex a repellendus!
-				Blanditiis maxime aliquam nihil molestiae repudiandae laborum vero
-				nesciunt atque iusto excepturi iste ex labore harum et eos, aperiam
-				quasi eaque, animi obcaecati consectetur ipsam. Placeat reiciendis
-				laboriosam perspiciatis id voluptatem facere quae doloremque
-				praesentium. Esse nam numquam enim, unde quas cum porro facere eos
-				aperiam ipsa. Delectus quis nemo reiciendis hic! Minima dignissimos
-				corporis quis consequatur saepe, laudantium distinctio natus
-				similique ullam velit, assumenda, a tempora. Sequi nostrum eum sit
-				porro eaque. Veniam exercitationem voluptate ullam eligendi
-				molestiae repudiandae totam eius autem earum, at quam nemo aliquam
-				tempore quidem architecto maxime magni ipsa aliquid doloribus id?
-			</div>
-			<div className='h-screen'>
-				Lorem ipsum dolor sit amet consectetur adipisicing elit. Qui
-				temporibus ratione voluptas corporis cum laudantium illum ea alias
-				eveniet amet quisquam debitis possimus, ullam sed doloribus labore
-				deleniti perspiciatis distinctio minus deserunt doloremque. Nam
-				veniam, enim eveniet cumque sit modi eius? Adipisci modi, aliquam
-				delectus dolores sint necessitatibus incidunt ea! Cupiditate est
-				neque, atque omnis perspiciatis amet numquam ratione, recusandae
-				laborum corrupti facilis nihil dolores totam delectus nulla saepe
-				eveniet voluptatum aperiam voluptatibus. Veniam iusto eaque illum
-				tempore molestias autem. Saepe animi voluptatem molestiae,
-				exercitationem hic eos molestias ipsam ipsa earum dolore nemo nihil
-				voluptate illum ab ducimus debitis repellat ex a repellendus!
-				Blanditiis maxime aliquam nihil molestiae repudiandae laborum vero
-				nesciunt atque iusto excepturi iste ex labore harum et eos, aperiam
-				quasi eaque, animi obcaecati consectetur ipsam. Placeat reiciendis
-				laboriosam perspiciatis id voluptatem facere quae doloremque
-				praesentium. Esse nam numquam enim, unde quas cum porro facere eos
-				aperiam ipsa. Delectus quis nemo reiciendis hic! Minima dignissimos
-				corporis quis consequatur saepe, laudantium distinctio natus
-				similique ullam velit, assumenda, a tempora. Sequi nostrum eum sit
-				porro eaque. Veniam exercitationem voluptate ullam eligendi
-				molestiae repudiandae totam eius autem earum, at quam nemo aliquam
-				tempore quidem architecto maxime magni ipsa aliquid doloribus id?
-			</div>
-			<div className='h-screen'>
-				Lorem ipsum dolor sit amet consectetur adipisicing elit. Qui
-				temporibus ratione voluptas corporis cum laudantium illum ea alias
-				eveniet amet quisquam debitis possimus, ullam sed doloribus labore
-				deleniti perspiciatis distinctio minus deserunt doloremque. Nam
-				veniam, enim eveniet cumque sit modi eius? Adipisci modi, aliquam
-				delectus dolores sint necessitatibus incidunt ea! Cupiditate est
-				neque, atque omnis perspiciatis amet numquam ratione, recusandae
-				laborum corrupti facilis nihil dolores totam delectus nulla saepe
-				eveniet voluptatum aperiam voluptatibus. Veniam iusto eaque illum
-				tempore molestias autem. Saepe animi voluptatem molestiae,
-				exercitationem hic eos molestias ipsam ipsa earum dolore nemo nihil
-				voluptate illum ab ducimus debitis repellat ex a repellendus!
-				Blanditiis maxime aliquam nihil molestiae repudiandae laborum vero
-				nesciunt atque iusto excepturi iste ex labore harum et eos, aperiam
-				quasi eaque, animi obcaecati consectetur ipsam. Placeat reiciendis
-				laboriosam perspiciatis id voluptatem facere quae doloremque
-				praesentium. Esse nam numquam enim, unde quas cum porro facere eos
-				aperiam ipsa. Delectus quis nemo reiciendis hic! Minima dignissimos
-				corporis quis consequatur saepe, laudantium distinctio natus
-				similique ullam velit, assumenda, a tempora. Sequi nostrum eum sit
-				porro eaque. Veniam exercitationem voluptate ullam eligendi
-				molestiae repudiandae totam eius autem earum, at quam nemo aliquam
-				tempore quidem architecto maxime magni ipsa aliquid doloribus id?
-			</div>
+
+			<EventPagination
+				currentPage={1}
+				totalPages={10}
+				paginationItemsToDisplay={5}
+			/>
 		</div>
 	);
 }

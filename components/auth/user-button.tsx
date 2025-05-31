@@ -10,6 +10,13 @@ import {
 import { useSession } from '@/lib/auth-client';
 import { cn } from '@/lib/utils';
 import { DropdownMenuTrigger } from '@radix-ui/react-dropdown-menu';
+import {
+	LayoutDashboardIcon,
+	LogOutIcon,
+	PlusIcon,
+	TicketIcon,
+} from 'lucide-react';
+import Link from 'next/link';
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
 import SignOutButton from './sign-out-button';
 
@@ -17,6 +24,24 @@ interface Props {
 	size?: number;
 	className?: string;
 }
+
+const navItems = [
+	{
+		icon: TicketIcon,
+		label: 'Tickets',
+		href: '/tickets',
+	},
+	{
+		icon: PlusIcon,
+		label: 'Create Event',
+		href: '/create',
+	},
+	{
+		icon: LayoutDashboardIcon,
+		label: 'Dashboard',
+		href: '/dashboard',
+	},
+];
 
 export default function UserButton({ size = 10, className }: Props) {
 	const { data: session } = useSession();
@@ -38,11 +63,24 @@ export default function UserButton({ size = 10, className }: Props) {
 
 			{/* content */}
 			<DropdownMenuContent>
-				<DropdownMenuLabel>My Account</DropdownMenuLabel>
+				<DropdownMenuLabel>{user.name}</DropdownMenuLabel>
 				<DropdownMenuSeparator />
-				<DropdownMenuItem>Profile</DropdownMenuItem>
-				<DropdownMenuItem>
-					<SignOutButton>Sign Out</SignOutButton>
+				{navItems.map((item) => (
+					<DropdownMenuItem
+						key={item.href}
+						className='cursor-pointer'
+						asChild>
+						<Link href={item.href}>
+							<item.icon className='size-4' />
+							{item.label}
+						</Link>
+					</DropdownMenuItem>
+				))}
+				<DropdownMenuItem className='cursor-pointer text-destructive'>
+					<SignOutButton className='w-full flex items-center gap-2'>
+						<LogOutIcon className='size-4 text-destructive' />
+						Sign Out
+					</SignOutButton>
 				</DropdownMenuItem>
 			</DropdownMenuContent>
 		</DropdownMenu>
