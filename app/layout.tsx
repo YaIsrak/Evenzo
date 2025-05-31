@@ -1,10 +1,10 @@
-import { Toaster } from '@/components/ui/sonner';
 import type { Metadata } from 'next';
-import { Inter } from 'next/font/google';
+import { DM_Sans } from 'next/font/google';
 import './globals.css';
 
-const inter = Inter({
+const inter = DM_Sans({
 	subsets: ['latin'],
+	display: 'swap',
 });
 
 export const metadata: Metadata = {
@@ -18,11 +18,14 @@ export default function RootLayout({
 	children: React.ReactNode;
 }>) {
 	return (
-		<html lang='en'>
-			<body className={`${inter.className} antialiased`}>
+		<html
+			lang='en'
+			suppressHydrationWarning
+			className='dark'>
+			<body
+				className={`${inter.className} bg-background text-foreground min-h-screen relative`}
+				suppressHydrationWarning>
 				{children}
-
-				<Toaster />
 			</body>
 		</html>
 	);

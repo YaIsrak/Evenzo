@@ -14,7 +14,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
 import SignOutButton from './sign-out-button';
 
 interface Props {
-	size: number;
+	size?: number;
 	className?: string;
 }
 
