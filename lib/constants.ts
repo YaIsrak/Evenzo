@@ -62,3 +62,28 @@ export const eventImages = [
 		alt: 'Event speakers',
 	},
 ];
+
+export const tickets = [
+	{
+		id: '1',
+		eventName: 'Tech Conference 2024',
+		eventId: '123',
+		date: 'March 15, 2024',
+		time: '9:00 AM - 5:00 PM',
+		location: 'Convention Center, New York',
+		ticketType: 'VIP Pass',
+		status: 'active',
+		qrCode: 'ticket-qr-1.png',
+	},
+	{
+		id: '2',
+		eventName: 'Music Festival 2024',
+		eventId: '456',
+		date: 'April 20, 2024',
+		time: '2:00 PM - 11:00 PM',
+		location: 'Central Park, New York',
+		ticketType: 'General Admission',
+		status: 'active',
+		qrCode: 'ticket-qr-2.png',
+	},
+];

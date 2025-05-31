@@ -18,5 +18,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-	matcher: ['/event/:id/join'], // Only protect the join route
+	matcher: ['/event/:id/join', '/dashboard', '/tickets', '/create'], // Only protect the join route
 };
