@@ -87,3 +87,34 @@ export const tickets = [
 		qrCode: 'ticket-qr-2.png',
 	},
 ];
+
+export interface Event {
+	id: string;
+	name: string;
+	category: string;
+	date: string;
+	time: string;
+	location: string;
+	attendees: number;
+}
+
+export const events: Event[] = [
+	{
+		id: '1',
+		name: 'Tech Conference 2024',
+		category: 'Technology',
+		date: 'March 15, 2024',
+		time: '9:00 AM - 5:00 PM',
+		location: 'Convention Center, New York',
+		attendees: 150,
+	},
+	{
+		id: '2',
+		name: 'Music Festival 2024',
+		category: 'Music',
+		date: 'April 20, 2024',
+		time: '2:00 PM - 11:00 PM',
+		location: 'Central Park, New York',
+		attendees: 500,
+	},
+];
