@@ -131,6 +131,12 @@ export default function SignInForm() {
 					{loading ? <Loader2 className='animate-spin' /> : 'Sign Up'}
 				</Button>
 
+				<div className='text-center text-muted-foreground flex items-center gap-2'>
+					<div className='inline-block w-1/2 h-[1px] bg-muted-foreground/50'></div>
+					or
+					<div className='inline-block w-1/2 h-[1px] bg-muted-foreground/50'></div>
+				</div>
+
 				<SocialLogin />
 			</form>
 		</Form>

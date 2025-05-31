@@ -8,7 +8,7 @@ export default function SignUpPage() {
 		<div className='w-[400px] shadow-none border p-6 rounded-2xl'>
 			<div className='pb-4'>
 				<Image
-					src='/logo-placeholder.png'
+					src='/logo.png'
 					alt='logo'
 					width={50}
 					height={50}
@@ -16,7 +16,7 @@ export default function SignUpPage() {
 				/>
 				<h1 className='text-lg md:text-xl font-bold'>Sign Up</h1>
 				<p className='text-xs md:text-sm text-muted-foreground'>
-					Enter your email below to login to your account
+					Create an account to join the community or create your own events
 				</p>
 			</div>
 

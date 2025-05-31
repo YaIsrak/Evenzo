@@ -8,7 +8,7 @@ export default function SignInPage() {
 		<div className='w-[400px] shadow-none border p-6 rounded-2xl'>
 			<div className='pb-4'>
 				<Image
-					src='/logo-placeholder.png'
+					src='/logo.png'
 					alt='logo'
 					width={50}
 					height={50}

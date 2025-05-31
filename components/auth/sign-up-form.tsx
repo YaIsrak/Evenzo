@@ -33,7 +33,7 @@ export default function SignUpForm() {
 	const form = useForm<z.infer<typeof signUpSchema>>({
 		resolver: zodResolver(signUpSchema),
 		defaultValues: {
-			username: '',
+			name: '',
 			email: '',
 			password: '',
 			confirmPassword: '',
@@ -44,7 +44,7 @@ export default function SignUpForm() {
 		await signUp.email({
 			email: values.email,
 			password: values.password,
-			name: values.username,
+			name: values.name,
 			callbackURL: callback_url,
 			fetchOptions: {
 				onResponse: () => {
@@ -74,13 +74,13 @@ export default function SignUpForm() {
 				{/* Username */}
 				<FormField
 					control={form.control}
-					name='username'
+					name='name'
 					render={({ field }) => (
 						<FormItem>
-							<FormLabel>Username</FormLabel>
+							<FormLabel>Name</FormLabel>
 							<FormControl>
 								<Input
-									placeholder='username'
+									placeholder='John Doe'
 									{...field}
 								/>
 							</FormControl>
@@ -197,6 +197,12 @@ export default function SignUpForm() {
 					disabled={loading}>
 					{loading ? <Loader2 className='animate-spin' /> : 'Sign Up'}
 				</Button>
+
+				<div className='text-center text-muted-foreground flex items-center gap-2'>
+					<div className='inline-block w-1/2 h-[1px] bg-muted-foreground/50'></div>
+					or
+					<div className='inline-block w-1/2 h-[1px] bg-muted-foreground/50'></div>
+				</div>
 
 				<SocialLogin />
 			</form>

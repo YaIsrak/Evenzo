@@ -18,7 +18,7 @@ interface Props {
 	className?: string;
 }
 
-export default function UserButton({ size = 12, className }: Props) {
+export default function UserButton({ size = 10, className }: Props) {
 	const { data: session } = useSession();
 	const user = session?.user;
 
@@ -30,8 +30,8 @@ export default function UserButton({ size = 12, className }: Props) {
 		<DropdownMenu>
 			{/* main trigger */}
 			<DropdownMenuTrigger className='rounded-full'>
-				<Avatar className={cn(`size-${size}`, className)}>
-					<AvatarImage src={user?.image || ''} />
+				<Avatar className={cn(`size-8 md:size-${size}`, className)}>
+					<AvatarImage src={user.image as string} />
 					<AvatarFallback>{user?.name}</AvatarFallback>
 				</Avatar>
 			</DropdownMenuTrigger>
