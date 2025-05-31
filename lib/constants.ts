@@ -13,6 +13,16 @@ export const navItems = [
 	},
 ];
 
+export const eventCategories = [
+	'Technology',
+	'Music',
+	'Business',
+	'Sports',
+	'Arts',
+	'Food',
+	'Other',
+] as const;
+
 export const reviewsDemoList = [
 	{
 		id: 1,

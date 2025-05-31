@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { DM_Sans } from 'next/font/google';
 import { NuqsAdapter } from 'nuqs/adapters/next';
+import { Toaster } from 'sonner';
 import './globals.css';
 
 const inter = DM_Sans({
@@ -26,7 +27,11 @@ export default function RootLayout({
 			<body
 				className={`${inter.className} bg-background text-foreground min-h-screen relative`}
 				suppressHydrationWarning>
-				<NuqsAdapter>{children}</NuqsAdapter>
+				<NuqsAdapter>
+					{children}
+
+					<Toaster />
+				</NuqsAdapter>
 			</body>
 		</html>
 	);
