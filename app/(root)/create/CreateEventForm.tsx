@@ -3,7 +3,6 @@
 import ImageUpload from '@/components/ImageUpload';
 import { Button } from '@/components/ui/button';
 import { Calendar } from '@/components/ui/calendar';
-import { Checkbox } from '@/components/ui/checkbox';
 import {
 	Form,
 	FormControl,
@@ -56,15 +55,12 @@ export default function CreateEventForm() {
 			time: '',
 			location: '',
 			description: '',
-			isFree: true,
-			price: '',
+			highlights: [],
 			capacity: '',
 			organizer: '',
 			organizerLink: '',
 		},
 	});
-
-	const isFree = form.watch('isFree');
 
 	async function onSubmit(values: EventFormValues) {
 		try {
@@ -235,49 +231,6 @@ export default function CreateEventForm() {
 						)}
 					/>
 
-					{/* Free Event */}
-					<FormField
-						control={form.control}
-						name='isFree'
-						render={({ field }) => (
-							<FormItem className='flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4 col-span-2'>
-								<FormControl>
-									<Checkbox
-										checked={field.value}
-										onCheckedChange={field.onChange}
-									/>
-								</FormControl>
-								<div className='space-y-1 leading-none'>
-									<FormLabel>Free Event</FormLabel>
-									<FormDescription>
-										Check this if the event is free to attend
-									</FormDescription>
-								</div>
-							</FormItem>
-						)}
-					/>
-
-					{/* Price */}
-					{!isFree && (
-						<FormField
-							control={form.control}
-							name='price'
-							render={({ field }) => (
-								<FormItem>
-									<FormLabel>Price</FormLabel>
-									<FormControl>
-										<Input
-											type='number'
-											placeholder='Enter ticket price'
-											{...field}
-										/>
-									</FormControl>
-									<FormMessage />
-								</FormItem>
-							)}
-						/>
-					)}
-
 					{/* Capacity */}
 					<FormField
 						control={form.control}
@@ -354,6 +307,86 @@ export default function CreateEventForm() {
 							</FormControl>
 							<FormDescription>
 								Provide a detailed description of your event
+							</FormDescription>
+							<FormMessage />
+						</FormItem>
+					)}
+				/>
+
+				{/* What to Expect */}
+				<FormField
+					control={form.control}
+					name='highlights'
+					render={({ field }) => (
+						<FormItem>
+							<FormLabel>What to Expect</FormLabel>
+							<FormControl>
+								<div className='space-y-4'>
+									<div className='flex gap-2'>
+										<Input
+											placeholder='Add a highlight (e.g., Keynote speeches from industry leaders)'
+											onKeyDown={(e) => {
+												if (e.key === 'Enter') {
+													e.preventDefault();
+													const input =
+														e.target as HTMLInputElement;
+													if (input.value.trim()) {
+														field.onChange([
+															...field.value,
+															input.value.trim(),
+														]);
+														input.value = '';
+													}
+												}
+											}}
+										/>
+										<Button
+											type='button'
+											variant='outline'
+											onClick={() => {
+												const input = document.querySelector(
+													'input[placeholder*="Add a highlight"]',
+												) as HTMLInputElement;
+												if (input?.value.trim()) {
+													field.onChange([
+														...field.value,
+														input.value.trim(),
+													]);
+													input.value = '';
+												}
+											}}>
+											Add
+										</Button>
+									</div>
+									{field.value.length > 0 && (
+										<ul className='space-y-2'>
+											{field.value.map((highlight, index) => (
+												<li
+													key={index}
+													className='flex items-center justify-between p-2 bg-muted rounded-md'>
+													<span>{highlight}</span>
+													<Button
+														type='button'
+														variant='ghost'
+														size='sm'
+														onClick={() => {
+															field.onChange(
+																field.value.filter(
+																	(_, i) => i !== index,
+																),
+															);
+														}}>
+														Remove
+													</Button>
+												</li>
+											))}
+										</ul>
+									)}
+								</div>
+							</FormControl>
+							<FormDescription>
+								Add highlights of what attendees can expect at your
+								event
 							</FormDescription>
 							<FormMessage />
 						</FormItem>

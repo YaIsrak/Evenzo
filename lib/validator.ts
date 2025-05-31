@@ -17,8 +17,7 @@ export const eventFormSchema = z.object({
 		.string()
 		.min(10, 'Description must be at least 10 characters')
 		.max(500, 'Description must not exceed 500 characters'),
-	isFree: z.boolean({ required_error: 'Please specify if the event is free' }),
-	price: z.string().optional(),
+	highlights: z.array(z.string()).min(1, 'Please add at least one highlight'),
 	capacity: z.string().min(1, 'Please enter the maximum capacity'),
 	organizer: z.string().min(2, 'Organizer name must be at least 2 characters'),
 	organizerLink: z
