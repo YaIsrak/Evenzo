@@ -15,6 +15,7 @@ import {
 	LogOutIcon,
 	PlusIcon,
 	TicketIcon,
+	UserIcon,
 } from 'lucide-react';
 import Link from 'next/link';
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
@@ -26,6 +27,11 @@ interface Props {
 }
 
 const navItems = [
+	{
+		icon: UserIcon,
+		label: 'Profile',
+		href: '/profile',
+	},
 	{
 		icon: TicketIcon,
 		label: 'Tickets',

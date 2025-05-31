@@ -10,8 +10,8 @@ const inter = DM_Sans({
 });
 
 export const metadata: Metadata = {
-	title: 'Better Auth Boilerplater',
-	description: 'A better auth boilerplate with mongodb adapter',
+	title: 'Evenzo',
+	description: 'A platform for creating and managing events',
 };
 
 export default function RootLayout({
