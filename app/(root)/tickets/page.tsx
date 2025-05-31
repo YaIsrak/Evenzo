@@ -47,47 +47,7 @@ export default async function TicketsPage() {
 
 			<div className='grid gap-6 md:grid-cols-2 lg:grid-cols-3'>
 				{tickets.map((ticket) => (
-					<Card
-						key={ticket.id}
-						className='flex flex-col'>
-						<CardHeader>
-							<CardTitle className='line-clamp-1'>
-								{ticket.eventName}
-							</CardTitle>
-							<CardDescription>{ticket.ticketType}</CardDescription>
-						</CardHeader>
-						<CardContent className='flex-1 space-y-4'>
-							<div className='space-y-2'>
-								<div className='flex items-center text-sm'>
-									<CalendarIcon className='mr-2 h-4 w-4 text-muted-foreground' />
-									<span>
-										{ticket.date} • {ticket.time}
-									</span>
-								</div>
-								<div className='flex items-center text-sm'>
-									<MapPinIcon className='mr-2 h-4 w-4 text-muted-foreground' />
-									<span className='line-clamp-1'>
-										{ticket.location}
-									</span>
-								</div>
-							</div>
-						</CardContent>
-						<CardFooter className='flex gap-2'>
-							<Button
-								variant='outline'
-								className='flex-1'
-								asChild>
-								<Link href={`/event/${ticket.eventId}`}>
-									<ExternalLinkIcon className='mr-2 h-4 w-4' />
-									View Event
-								</Link>
-							</Button>
-							<Button className='flex-1'>
-								<DownloadIcon className='mr-2 h-4 w-4' />
-								Download
-							</Button>
-						</CardFooter>
-					</Card>
+					<TicketCard key={ticket.id} />
 				))}
 			</div>
 
@@ -108,5 +68,55 @@ export default async function TicketsPage() {
 				</Card>
 			)}
 		</div>
+	);
+}
+
+function TicketCard() {
+	const ticket = tickets[0];
+	return (
+		<Card
+			key={ticket.id}
+			className='flex flex-col'>
+			<CardHeader>
+				<CardTitle className='line-clamp-1'>{ticket.eventName}</CardTitle>
+				<CardDescription>{ticket.ticketType}</CardDescription>
+			</CardHeader>
+			<CardContent className='flex-1 space-y-4'>
+				<div className='space-y-2'>
+					<div className='flex items-center text-sm'>
+						<CalendarIcon className='mr-2 h-4 w-4 text-muted-foreground' />
+						<span>
+							{ticket.date} • {ticket.time}
+						</span>
+					</div>
+					<div className='flex items-center text-sm'>
+						<MapPinIcon className='mr-2 h-4 w-4 text-muted-foreground' />
+						<span className='line-clamp-1'>{ticket.location}</span>
+					</div>
+				</div>
+			</CardContent>
+			<CardFooter className='flex gap-2'>
+				<Button
+					variant='outline'
+					asChild>
+					<Link href={`/event/${ticket.eventId}`}>
+						<ExternalLinkIcon />
+						View Event
+					</Link>
+				</Button>
+				<Button
+					variant='outline'
+					asChild>
+					<Link href={`/event/${ticket.eventId}`}>
+						<ExternalLinkIcon />
+						View Event
+					</Link>
+				</Button>
+				<Button>
+					<DownloadIcon />
+					Download
+				</Button>
+			</CardFooter>
+		</Card>
 	);
 }
