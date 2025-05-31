@@ -16,6 +16,7 @@ import { signInSchema } from '@/lib/utils/schema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { EyeIcon, EyeOffIcon, Loader2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
+import { parseAsString, useQueryState } from 'nuqs';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
@@ -25,6 +26,7 @@ import SocialLogin from './social-login';
 export default function SignInForm() {
 	const [showPassword, setShowPassword] = useState(false);
 	const [loading, setLoading] = useState(false);
+	const [redirectLink] = useQueryState('redirect', parseAsString);
 	const router = useRouter();
 
 	const form = useForm<z.infer<typeof signInSchema>>({
@@ -54,7 +56,7 @@ export default function SignInForm() {
 				},
 				onSuccess: () => {
 					toast.success('Signed in');
-					router.push(callback_url);
+					router.push(redirectLink || callback_url);
 				},
 			},
 		});
@@ -137,7 +139,7 @@ export default function SignInForm() {
 					<div className='inline-block w-1/2 h-[1px] bg-muted-foreground/50'></div>
 				</div>
 
-				<SocialLogin />
+				<SocialLogin redirectLink={redirectLink || '/'} />
 			</form>
 		</Form>
 	);

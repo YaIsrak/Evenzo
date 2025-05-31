@@ -5,7 +5,11 @@ import { Loader2 } from 'lucide-react';
 import Image from 'next/image';
 import { useState } from 'react';
 
-export default function SocialLogin() {
+export default function SocialLogin({
+	redirectLink,
+}: {
+	redirectLink: string;
+}) {
 	const [loading, setLoading] = useState(false);
 	return (
 		<div
@@ -21,7 +25,7 @@ export default function SocialLogin() {
 					await signIn.social(
 						{
 							provider: 'google',
-							callbackURL: '/',
+							callbackURL: redirectLink || '/',
 						},
 						{
 							onRequest: (ctx) => {
