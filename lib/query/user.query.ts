@@ -1,5 +1,7 @@
 'use server';
 
+import { headers } from 'next/headers';
+import { auth } from '../auth';
 import { dbConnect } from '../db';
 import { IUser, User } from '../model/user.model';
 import { replaceMongoIdInObject } from '../utils/objectfix';
@@ -10,7 +12,21 @@ export const getUserById = async (id: string): Promise<IUser | null> => {
 		const user = await User.findById(id);
 		return replaceMongoIdInObject(user);
 	} catch (error) {
-		console.log(error);
-		return null;
+		throw error;
+	}
+};
+
+export const getCurrentProfile = async (): Promise<IUser | null> => {
+	try {
+		const session = await auth.api.getSession({
+			headers: await headers(), // you need to pass the headers object.
+		});
+		const user = session?.user;
+
+		const profile = await getUserById(user?.id as string);
+
+		return profile;
+	} catch (error) {
+		throw error;
 	}
 };

@@ -7,12 +7,12 @@ import {
 	Loader,
 	PlusIcon,
 	UploadIcon,
-	XIcon,
 } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import { useFileUpload } from '@/hooks/use-file-upload';
 import axios from 'axios';
+import { useState } from 'react';
 import { toast } from 'sonner';
 
 interface ImageUploadProps {
@@ -29,6 +29,7 @@ export default function ImageUpload({
 	const maxSizeMB = 5;
 	const maxSize = maxSizeMB * 1024 * 1024; // 5MB default
 	const maxFiles = 6;
+	const [uploaded, setUploaded] = useState(false);
 
 	const [
 		{ files, isDragging, errors },
@@ -66,6 +67,7 @@ export default function ImageUpload({
 
 			setImages(data.urls);
 			setIsUploading(false);
+			setUploaded(true);
 		} catch (error) {
 			toast.error('Failed to upload images', {
 				description: (error as Error).message,
@@ -97,7 +99,7 @@ export default function ImageUpload({
 							</h3>
 
 							<div className='flex items-center gap-2'>
-								{files.length !== maxFiles && (
+								{files.length !== maxFiles && !uploaded && (
 									<Button
 										onClick={openFileDialog}
 										disabled={files.length >= maxFiles}
@@ -111,7 +113,7 @@ export default function ImageUpload({
 									</Button>
 								)}
 
-								{files.length !== 0 && (
+								{files.length !== 0 && !uploaded && (
 									<Button
 										onClick={handleUploadOnCloud}
 										disabled={isUploading}>
@@ -130,19 +132,12 @@ export default function ImageUpload({
 							{files.map((file) => (
 								<div
 									key={file.id}
-									className='bg-accent relative aspect-square rounded-md'>
+									className='bg-accent relative aspect-square rounded-2xl'>
 									<img
 										src={file.preview}
 										alt={file.file.name}
 										className='size-full rounded-2xl object-cover'
 									/>
-									<Button
-										onClick={() => removeFile(file.id)}
-										size='icon'
-										className='bg-black border-background focus-visible:border-background absolute -top-2 -right-2 size-6 rounded-full border-2 shadow-none'
-										aria-label='Remove image'>
-										<XIcon className='size-6' />
-									</Button>
 								</div>
 							))}
 						</div>

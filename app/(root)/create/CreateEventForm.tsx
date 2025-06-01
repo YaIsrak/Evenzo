@@ -26,13 +26,16 @@ import {
 	SelectValue,
 } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
+import useCurrentUser from '@/hooks/use-current-user';
+import { createEvent } from '@/lib/actions/event.action';
 import { eventCategories } from '@/lib/constants';
 import { cn } from '@/lib/utils';
 import { eventFormSchema, EventFormValues } from '@/lib/validator';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { format } from 'date-fns';
 import { CalendarIcon } from 'lucide-react';
-import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 
@@ -45,14 +48,16 @@ const timeSlots = Array.from({ length: 24 * 4 }, (_, i) => {
 export default function CreateEventForm() {
 	const [images, setImages] = useState<string[]>([]);
 	const [isUploading, setIsUploading] = useState(false);
+	const { profile } = useCurrentUser();
+	const router = useRouter();
 
 	const form = useForm<EventFormValues>({
 		resolver: zodResolver(eventFormSchema),
 		defaultValues: {
 			name: '',
-			category: eventCategories[0],
+			category: undefined,
 			date: new Date(),
-			time: '',
+			time: '00:00',
 			location: '',
 			description: '',
 			highlights: [],
@@ -62,6 +67,13 @@ export default function CreateEventForm() {
 		},
 	});
 
+	useEffect(() => {
+		if (profile) {
+			form.setValue('organizer', profile.organization || '');
+			form.setValue('organizerLink', profile.organizationLink || '');
+		}
+	}, [profile]);
+
 	async function onSubmit(values: EventFormValues) {
 		try {
 			if (images.length === 0) {
@@ -69,10 +81,20 @@ export default function CreateEventForm() {
 				return;
 			}
 
-			// TODO: Implement event creation
-			console.log(values, images);
+			await createEvent({
+				event: values,
+				images,
+				userId: profile?.id as string,
+			});
+
+			toast.success('Event created successfully');
+			form.reset();
+			setImages([]);
+			router.push('/');
 		} catch (error) {
-			toast.error('Failed to create event');
+			toast.error('Failed to create event', {
+				description: (error as Error).message,
+			});
 		}
 	}
 
@@ -397,10 +419,17 @@ export default function CreateEventForm() {
 					<Button
 						type='button'
 						variant='outline'
+						disabled={isUploading || form.formState.isSubmitting}
 						onClick={() => form.reset()}>
 						Reset
 					</Button>
-					<Button type='submit'>Create Event</Button>
+					<Button
+						type='submit'
+						disabled={isUploading || form.formState.isSubmitting}>
+						{isUploading || form.formState.isSubmitting
+							? 'Creating...'
+							: 'Create Event'}
+					</Button>
 				</div>
 			</form>
 		</Form>

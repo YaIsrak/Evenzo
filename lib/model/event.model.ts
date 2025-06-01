@@ -3,7 +3,7 @@ import mongoose, { Document, Schema } from 'mongoose';
 export interface IEvent extends Document {
 	title: string;
 	description: string;
-	highlight: string[];
+	highlights: string[];
 	date: Date;
 	time: string;
 	location: string;
@@ -27,7 +27,7 @@ const eventSchema = new Schema<IEvent>(
 			type: String,
 			required: true,
 		},
-		highlight: {
+		highlights: {
 			type: [String],
 			required: true,
 		},

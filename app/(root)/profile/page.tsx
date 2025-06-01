@@ -1,20 +1,14 @@
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
-import { auth } from '@/lib/auth';
-import { getUserById } from '@/lib/query/user.query';
+import { getCurrentProfile } from '@/lib/query/user.query';
 import { UserIcon } from 'lucide-react';
-import { headers } from 'next/headers';
 import Image from 'next/image';
 import ProfileForm from './profile-form';
 
 export default async function ProfilePage() {
-	const session = await auth.api.getSession({
-		headers: await headers(), // you need to pass the headers object.
-	});
-	const user = session?.user;
+	const profile = await getCurrentProfile();
 
-	const profile = await getUserById(user?.id as string);
 	if (!profile) {
 		return <div>No profile found</div>;
 	}
@@ -29,6 +23,7 @@ export default async function ProfilePage() {
 				</p>
 			</div>
 
+			{/* <pre>{JSON.stringify(profile, null, 2)}</pre> */}
 			{/* Main Content */}
 			<div className='grid gap-6 md:grid-cols-3'>
 				{/* Left Column - Profile Info */}
@@ -37,10 +32,10 @@ export default async function ProfilePage() {
 					<Card className='p-6'>
 						<div className='flex items-center gap-6'>
 							<div className='relative h-24 w-24 rounded-full bg-muted'>
-								{user?.image ? (
+								{profile?.image ? (
 									<div className=''>
 										<Image
-											src={user.image}
+											src={profile.image}
 											alt='Profile preview'
 											layout='fill'
 											objectFit='cover'
@@ -52,9 +47,11 @@ export default async function ProfilePage() {
 								)}
 							</div>
 							<div className='space-y-1'>
-								<h2 className='text-xl font-semibold'>{user?.name}</h2>
+								<h2 className='text-xl font-semibold'>
+									{profile?.name}
+								</h2>
 								<p className='text-sm text-muted-foreground'>
-									{user?.email}
+									{profile?.email}
 								</p>
 							</div>
 						</div>
@@ -75,7 +72,7 @@ export default async function ProfilePage() {
 							<div>
 								<p className='text-sm font-medium'>Email Address</p>
 								<p className='text-sm text-muted-foreground'>
-									{user?.email}
+									{profile?.email}
 								</p>
 								<p className='text-xs text-muted-foreground mt-1'>
 									Email address cannot be changed

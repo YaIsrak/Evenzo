@@ -63,7 +63,7 @@ export default function UserButton({ size = 10, className }: Props) {
 			<DropdownMenuTrigger className='rounded-full'>
 				<Avatar className={cn(`size-8 md:size-${size}`, className)}>
 					<AvatarImage src={user.image as string} />
-					<AvatarFallback>{user?.name}</AvatarFallback>
+					<AvatarFallback>{user?.name[0]}</AvatarFallback>
 				</Avatar>
 			</DropdownMenuTrigger>
 

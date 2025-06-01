@@ -2,10 +2,13 @@ import SignedIn from '@/components/auth/signed-in';
 import EventCard from '@/components/EventCard';
 import EventPagination from '@/components/EventPagination';
 import { Button } from '@/components/ui/button';
+import { getEvents } from '@/lib/query/event.query';
 import { PlusIcon } from 'lucide-react';
 import Link from 'next/link';
 
-export default function MainPage() {
+export default async function MainPage() {
+	const events = await getEvents();
+
 	return (
 		<div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-8'>
 			<SignedIn>
@@ -23,12 +26,12 @@ export default function MainPage() {
 
 			{/* Event grid */}
 			<div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4'>
-				<EventCard />
-				<EventCard />
-				<EventCard />
-				<EventCard />
-				<EventCard />
-				<EventCard />
+				{events.map((event) => (
+					<EventCard
+						key={event.id}
+						event={event}
+					/>
+				))}
 			</div>
 
 			<EventPagination
