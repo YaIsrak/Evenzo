@@ -44,3 +44,21 @@ export const createEvent = async ({
 		throw error;
 	}
 };
+
+export const cancelEvent = async (id: string, userId: string) => {
+	try {
+		dbConnect();
+		const event = await Event.findById(id);
+		if (!event) throw new Error('Event not found');
+
+		if (event.organizer.toString() !== userId)
+			throw new Error('You are not authorized to cancel this event');
+
+		event.status = 'cancelled';
+		await event.save();
+
+		// todo: send email to all attendees
+	} catch (error) {
+		throw error;
+	}
+};

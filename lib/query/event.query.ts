@@ -21,3 +21,15 @@ export const getEventById = async (id: string): Promise<IEvent> => {
 		throw error;
 	}
 };
+
+export const getEventByUserId = async (userId: string): Promise<IEvent[]> => {
+	try {
+		dbConnect();
+		const events = await Event.find({
+			organizer: userId,
+		});
+		return events.map((event) => replaceMongoIdInObject(event));
+	} catch (error) {
+		throw error;
+	}
+};

@@ -3,6 +3,7 @@
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { IEvent } from '@/lib/model/event.model';
+import { getStatusColor } from '@/lib/utils/getStatusColor';
 import {
 	CalendarIcon,
 	ClockIcon,
@@ -14,17 +15,6 @@ import Image from 'next/image';
 import Link from 'next/link';
 
 export default function EventCard({ event }: { event: IEvent }) {
-	const getStatusColor = (status: string) => {
-		switch (status) {
-			case 'cancelled':
-				return 'destructive';
-			case 'past':
-				return 'secondary';
-			default:
-				return 'default';
-		}
-	};
-
 	return (
 		<div className='group border rounded-lg overflow-hidden hover:bg-accent/10 transition-colors'>
 			<Link

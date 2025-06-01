@@ -3,6 +3,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { getEventById } from '@/lib/query/event.query';
+import { getStatusColor } from '@/lib/utils/getStatusColor';
 import { CalendarIcon, DollarSignIcon, MapPinIcon } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -21,14 +22,7 @@ export default async function EventPage({
 			<div className='space-y-4'>
 				<div className='flex items-center justify-between gap-4'>
 					<h1 className='text-3xl font-bold'>{event.title}</h1>
-					<Badge
-						variant={
-							event.status === 'cancelled'
-								? 'destructive'
-								: event.status === 'past'
-								? 'secondary'
-								: 'default'
-						}>
+					<Badge variant={getStatusColor(event.status)}>
 						{event.status.charAt(0).toUpperCase() + event.status.slice(1)}
 					</Badge>
 				</div>
