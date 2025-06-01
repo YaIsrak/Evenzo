@@ -12,6 +12,7 @@ export interface IEvent extends Document {
 	capacity: number;
 	images?: string[];
 	status: 'cancelled' | 'upcoming' | 'past';
+	cancelReason?: string;
 	createdAt: Date;
 	updatedAt: Date;
 }
@@ -65,6 +66,10 @@ const eventSchema = new Schema<IEvent>(
 			type: String,
 			enum: ['cancelled', 'upcoming', 'past'],
 			default: 'upcoming',
+		},
+		cancelReason: {
+			type: String,
+			required: false,
 		},
 	},
 	{

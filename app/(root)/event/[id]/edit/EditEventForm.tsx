@@ -1,6 +1,6 @@
 'use client';
 
-import ImageUpload from '@/components/ImageUpload';
+import { ImagesPreview } from '@/components/ImageUpload';
 import { Button } from '@/components/ui/button';
 import { Calendar } from '@/components/ui/calendar';
 import {
@@ -26,12 +26,16 @@ import {
 	SelectValue,
 } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
+import { updateEvent } from '@/lib/actions/event.action';
 import { eventCategories } from '@/lib/constants';
+import { IEvent } from '@/lib/model/event.model';
+import { IUser } from '@/lib/model/user.model';
 import { cn } from '@/lib/utils';
 import { eventFormSchema, EventFormValues } from '@/lib/validator';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { format } from 'date-fns';
 import { CalendarIcon } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
@@ -42,22 +46,29 @@ const timeSlots = Array.from({ length: 24 * 4 }, (_, i) => {
 	return format(new Date().setHours(hour, minute), 'HH:mm');
 });
 
-export default function EditEventForm() {
-	const [images, setImages] = useState<string[]>([]);
+export default function EditEventForm({
+	event,
+	profile,
+}: {
+	event: IEvent;
+	profile: IUser;
+}) {
+	const [images, setImages] = useState<string[]>(event.images || []);
 	const [isUploading, setIsUploading] = useState(false);
+	const router = useRouter();
 
 	const form = useForm<EventFormValues>({
 		resolver: zodResolver(eventFormSchema),
 		defaultValues: {
-			name: '',
-			category: eventCategories[0],
-			date: new Date(),
-			time: '',
-			location: '',
-			description: '',
-			highlights: [],
-			capacity: '',
-			organizer: '',
+			name: event.title,
+			category: event.category as (typeof eventCategories)[number],
+			date: new Date(event.date),
+			time: event.time,
+			location: event.location,
+			description: event.description,
+			highlights: event.highlights,
+			capacity: event.capacity.toString(),
+			organizer: profile.name,
 			organizerLink: '',
 		},
 	});
@@ -69,10 +80,13 @@ export default function EditEventForm() {
 				return;
 			}
 
-			// TODO: Implement event creation
-			console.log(values, images);
+			await updateEvent(event.id.toString(), images, values, profile.id);
+			toast.success('Event updated successfully');
+			router.push(`/event/${event.id}`);
 		} catch (error) {
-			toast.error('Failed to create event');
+			toast.error('Failed to update event', {
+				description: (error as Error).message,
+			});
 		}
 	}
 
@@ -206,11 +220,7 @@ export default function EditEventForm() {
 					/>
 
 					<div className='col-span-2'>
-						<ImageUpload
-							setImages={setImages}
-							isUploading={isUploading}
-							setIsUploading={setIsUploading}
-						/>
+						<ImagesPreview images={images} />
 					</div>
 
 					{/* Location */}
@@ -393,14 +403,13 @@ export default function EditEventForm() {
 					)}
 				/>
 
-				<div className='flex justify-end gap-4'>
+				<div className='flex justify-end gap-2'>
 					<Button
-						type='button'
-						variant='outline'
-						onClick={() => form.reset()}>
-						Reset
+						type='submit'
+						disabled={form.formState.isSubmitting}
+						size='sm'>
+						Create Event
 					</Button>
-					<Button type='submit'>Create Event</Button>
 				</div>
 			</form>
 		</Form>

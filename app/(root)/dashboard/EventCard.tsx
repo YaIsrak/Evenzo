@@ -32,7 +32,7 @@ const EventCard = ({ event, profile }: { event: IEvent; profile: IUser }) => {
 						<CardTitle className='line-clamp-1'>{event.title}</CardTitle>
 						<CardDescription>{event.category}</CardDescription>
 					</div>
-					<Badge className={getStatusColor(event.status)}>
+					<Badge variant={getStatusColor(event.status)}>
 						{event.status.charAt(0).toUpperCase() + event.status.slice(1)}
 					</Badge>
 				</div>

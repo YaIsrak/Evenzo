@@ -10,10 +10,12 @@ import {
 	DialogTitle,
 	DialogTrigger,
 } from '@/components/ui/dialog';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
 import { cancelEvent } from '@/lib/actions/event.action';
 import { IEvent } from '@/lib/model/event.model';
 import { IUser } from '@/lib/model/user.model';
-import { TrashIcon } from 'lucide-react';
+import { X } from 'lucide-react';
 import { useState } from 'react';
 import { toast } from 'sonner';
 
@@ -26,11 +28,18 @@ export default function CancelEvent({
 }) {
 	const [isLoading, setIsLoading] = useState(false);
 	const [isOpen, setIsOpen] = useState(false);
+	const [reason, setReason] = useState('');
 
 	const handleCancelEvent = async () => {
 		setIsLoading(true);
 		try {
-			await cancelEvent(event.id.toString(), profile.id);
+			if (!reason) {
+				toast.error('Please enter a reason for cancelling event');
+				setIsLoading(false);
+				return;
+			}
+
+			await cancelEvent(event.id.toString(), profile.id, reason);
 			toast.success('Event cancelled successfully');
 			setIsOpen(false);
 		} catch (error) {
@@ -50,19 +59,28 @@ export default function CancelEvent({
 				<Button
 					variant='destructive'
 					className='flex-1 cursor-pointer'>
-					<TrashIcon className='mr-2 h-4 w-4' />
-					Delete
+					<X className='mr-2 h-4 w-4' />
+					Cancle
 				</Button>
 			</DialogTrigger>
 			<DialogContent>
 				<DialogHeader>
 					<DialogTitle>
-						Are you sure you want to delete this event?
+						Are you sure you want to cancel this event?
 					</DialogTitle>
 					<DialogDescription>
 						This action cannot be undone.
 					</DialogDescription>
 				</DialogHeader>
+
+				<div className='flex flex-col gap-2'>
+					<Label>Reason</Label>
+					<Textarea
+						placeholder='Enter reason for cancelling event'
+						value={reason}
+						onChange={(e) => setReason(e.target.value)}
+					/>
+				</div>
 
 				<DialogFooter>
 					<Button
@@ -70,7 +88,7 @@ export default function CancelEvent({
 						disabled={isLoading}
 						className='cursor-pointer'
 						onClick={handleCancelEvent}>
-						Delete
+						Cancel
 					</Button>
 				</DialogFooter>
 			</DialogContent>

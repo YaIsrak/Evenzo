@@ -1,9 +1,9 @@
 export const getStatusColor = (status: string) => {
 	switch (status) {
 		case 'cancelled':
-			return 'bg-rose-500 text-white';
+			return 'destructive';
 		case 'past':
-			return 'bg-gray-500 text-white';
+			return 'secondary';
 		default:
 			return 'default';
 	}

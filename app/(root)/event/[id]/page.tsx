@@ -94,8 +94,8 @@ export default async function EventPage({
 							What to Expect
 						</h2>
 						<ul className='list-disc list-inside space-y-2 text-muted-foreground'>
-							{event.highlights?.map((highlight) => (
-								<li key={highlight}>{highlight}</li>
+							{event.highlights?.map((highlight, i) => (
+								<li key={i}>{highlight}</li>
 							))}
 						</ul>
 					</div>

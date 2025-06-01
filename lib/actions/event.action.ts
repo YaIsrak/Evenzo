@@ -45,7 +45,11 @@ export const createEvent = async ({
 	}
 };
 
-export const cancelEvent = async (id: string, userId: string) => {
+export const cancelEvent = async (
+	id: string,
+	userId: string,
+	reason: string,
+) => {
 	try {
 		dbConnect();
 		const event = await Event.findById(id);
@@ -55,9 +59,42 @@ export const cancelEvent = async (id: string, userId: string) => {
 			throw new Error('You are not authorized to cancel this event');
 
 		event.status = 'cancelled';
+		event.cancelReason = reason;
 		await event.save();
 
 		// todo: send email to all attendees
+	} catch (error) {
+		throw error;
+	}
+};
+
+export const updateEvent = async (
+	id: string,
+	images: string[],
+	updateEvent: EventFormValues,
+	userId: string,
+) => {
+	try {
+		dbConnect();
+		const event = await Event.findById(id);
+		if (!event) throw new Error('Event not found');
+
+		if (event.organizer.toString() !== userId)
+			throw new Error('You are not authorized to update this event');
+
+		event.title = updateEvent.name;
+		event.description = updateEvent.description;
+		event.highlights = updateEvent.highlights;
+		event.date = updateEvent.date;
+		event.time = updateEvent.time;
+		event.location = updateEvent.location;
+		event.capacity = updateEvent.capacity;
+		event.category = updateEvent.category;
+		event.images = images;
+
+		await event.save();
+
+		return replaceMongoIdInObject(event);
 	} catch (error) {
 		throw error;
 	}
