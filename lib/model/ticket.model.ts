@@ -28,7 +28,6 @@ const ticketSchema = new Schema<ITicket>(
 		},
 		ticketId: {
 			type: String,
-			required: true,
 			unique: true,
 		},
 		status: {

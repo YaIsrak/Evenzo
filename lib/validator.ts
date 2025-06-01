@@ -38,5 +38,15 @@ export const profileFormSchema = z.object({
 	}),
 });
 
+export const joinFormSchema = z.object({
+	fullName: z.string().min(2, 'Name must be at least 2 characters'),
+	email: z.string().email('Please enter a valid email address'),
+	phone: z.string().min(10, 'Please enter a valid phone number'),
+	terms: z.boolean().refine((val) => val === true, {
+		message: 'You must accept the terms and conditions',
+	}),
+});
+
 export type EventFormValues = z.infer<typeof eventFormSchema>;
 export type ProfileFormValues = z.infer<typeof profileFormSchema>;
+export type JoinFormValues = z.infer<typeof joinFormSchema>;

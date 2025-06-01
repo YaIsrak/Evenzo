@@ -1,5 +1,6 @@
 'use server';
 
+import { revalidatePath } from 'next/cache';
 import { dbConnect } from '../db';
 import { Event } from '../model/event.model';
 import { replaceMongoIdInObject } from '../utils/objectfix';
@@ -63,6 +64,8 @@ export const cancelEvent = async (
 		await event.save();
 
 		// todo: send email to all attendees
+
+		revalidatePath(`/event/${id}`);
 	} catch (error) {
 		throw error;
 	}
@@ -93,6 +96,10 @@ export const updateEvent = async (
 		event.images = images;
 
 		await event.save();
+
+		// todo: send email to all attendees
+
+		revalidatePath(`/event/${id}`);
 
 		return replaceMongoIdInObject(event);
 	} catch (error) {

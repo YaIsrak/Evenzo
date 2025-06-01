@@ -37,10 +37,13 @@ export default async function EventPage({
 							})}
 						</span>
 					</div>
-					<div className='flex items-center gap-2'>
+					<Link
+						href={`https://maps.google.com/?q=${event.location}`}
+						target='_blank'
+						className='flex items-center gap-2 hover:underline'>
 						<MapPinIcon className='size-4' />
 						<span>{event.location}</span>
-					</div>
+					</Link>
 					<div className='flex items-center gap-2'>
 						<DollarSignIcon className='size-4' />
 						<span>Free for All</span>
