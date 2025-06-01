@@ -1,26 +1,12 @@
-import AvatarUpload from '@/components/auth/AvatarUpload';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { auth } from '@/lib/auth';
+import { getUserById } from '@/lib/query/user.query';
+import { UserIcon } from 'lucide-react';
 import { headers } from 'next/headers';
+import Image from 'next/image';
 import ProfileForm from './profile-form';
-
-// This would typically come from your database
-const getUserProfile = async () => {
-	// Simulated API call
-	return {
-		id: 'user-123',
-		name: 'John Doe',
-		email: 'john.doe@example.com',
-		image: '/placeholder-avatar.jpg',
-		organization: {
-			name: 'Tech Solutions Inc.',
-			url: 'https://techsolutions.example.com',
-		},
-		contact: '+1 (555) 123-4567',
-	};
-};
 
 export default async function ProfilePage() {
 	const session = await auth.api.getSession({
@@ -28,13 +14,13 @@ export default async function ProfilePage() {
 	});
 	const user = session?.user;
 
-	const profile = await getUserProfile();
+	const profile = await getUserById(user?.id as string);
 	if (!profile) {
 		return <div>No profile found</div>;
 	}
 
 	return (
-		<div className='max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8'>
+		<main className='max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8'>
 			{/* Header */}
 			<div className='space-y-1'>
 				<h1 className='text-3xl font-bold'>Profile Settings</h1>
@@ -50,7 +36,21 @@ export default async function ProfilePage() {
 					{/* Profile Image */}
 					<Card className='p-6'>
 						<div className='flex items-center gap-6'>
-							<AvatarUpload image={user?.image as string} />
+							<div className='relative h-24 w-24 rounded-full bg-muted'>
+								{user?.image ? (
+									<div className=''>
+										<Image
+											src={user.image}
+											alt='Profile preview'
+											layout='fill'
+											objectFit='cover'
+											className='h-full w-full object-cover rounded-full'
+										/>
+									</div>
+								) : (
+									<UserIcon className='h-12 w-12 text-muted-foreground absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2' />
+								)}
+							</div>
 							<div className='space-y-1'>
 								<h2 className='text-xl font-semibold'>{user?.name}</h2>
 								<p className='text-sm text-muted-foreground'>
@@ -104,6 +104,6 @@ export default async function ProfilePage() {
 					</Card>
 				</div>
 			</div>
-		</div>
+		</main>
 	);
 }

@@ -27,4 +27,16 @@ export const eventFormSchema = z.object({
 		.or(z.literal('')),
 });
 
+export const profileFormSchema = z.object({
+	name: z.string().min(2, {
+		message: 'Name must be at least 2 characters.',
+	}),
+	organizationName: z.string().optional(),
+	organizationUrl: z.string().optional(),
+	contact: z.string().min(10, {
+		message: 'Please enter a valid phone number.',
+	}),
+});
+
 export type EventFormValues = z.infer<typeof eventFormSchema>;
+export type ProfileFormValues = z.infer<typeof profileFormSchema>;
