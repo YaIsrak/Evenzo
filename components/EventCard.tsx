@@ -1,18 +1,22 @@
-'use client';
-
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { IEvent } from '@/lib/model/event.model';
+import { getTicketsByEventId } from '@/lib/query/ticket.query';
+import { getCurrentProfile } from '@/lib/query/user.query';
 import { getStatusColor } from '@/lib/utils/getStatusColor';
 import {
 	CalendarIcon,
+	CheckIcon,
 	ClockIcon,
 	DollarSignIcon,
 	MapPinIcon,
 	PlusIcon,
+	TicketIcon,
 } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { Suspense } from 'react';
+import { Skeleton } from './ui/skeleton';
 
 export default function EventCard({ event }: { event: IEvent }) {
 	return (
@@ -71,12 +75,28 @@ export default function EventCard({ event }: { event: IEvent }) {
 				</div>
 			</Link>
 			<div className='px-4 pb-4'>
+				<Suspense fallback={<Skeleton className='w-full h-10' />}>
+					<JoinButton event={event} />
+				</Suspense>
+			</div>
+		</div>
+	);
+}
+
+async function JoinButton({ event }: { event: IEvent }) {
+	const profile = await getCurrentProfile();
+	const tickets = await getTicketsByEventId(event.id);
+	const myTicket = tickets?.find((ticket) => ticket.user._id === profile?.id);
+
+	return (
+		<div className='gap-2 w-full cursor-pointer'>
+			{!myTicket ? (
 				<Button
+					className='w-full'
 					size='sm'
 					variant='outline'
-					className='gap-2 w-full'
-					asChild
-					disabled={event.status === 'past'}>
+					disabled={event.status === 'past'}
+					asChild>
 					<Link
 						href={
 							event.status === 'past'
@@ -87,7 +107,30 @@ export default function EventCard({ event }: { event: IEvent }) {
 						{event.status === 'past' ? 'View' : 'Join Event'}
 					</Link>
 				</Button>
-			</div>
+			) : (
+				<div className='flex gap-2'>
+					<Button
+						size='sm'
+						variant='outline'
+						className='flex-1 text-green-500'
+						asChild>
+						<Link href={`/tickets/${myTicket?.ticketId}`}>
+							<TicketIcon className='size-4' />
+							View Ticket
+						</Link>
+					</Button>
+					<Button
+						size='sm'
+						variant='outline'
+						className='flex-1'
+						asChild>
+						<Link href={`/event/${event.id}`}>
+							<CheckIcon className='size-4' />
+							View Event
+						</Link>
+					</Button>
+				</div>
+			)}
 		</div>
 	);
 }

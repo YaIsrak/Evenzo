@@ -1,26 +1,32 @@
 import { Card } from '@/components/ui/card';
 import { getEventById } from '@/lib/query/event.query';
+import { getTicketsByEventId } from '@/lib/query/ticket.query';
 import { getCurrentProfile } from '@/lib/query/user.query';
 import { CalendarIcon, MapPinIcon } from 'lucide-react';
 import Image from 'next/image';
+import { notFound, redirect } from 'next/navigation';
 import EventJoinForm from './EventJoinForm';
 
 export default async function EventJoinPage({
 	params,
 }: {
-	params: { id: string };
+	params: Promise<{ id: string }>;
 }) {
-	const event = await getEventById(params.id);
+	const { id } = await params;
+	const event = await getEventById(id);
 	const profile = await getCurrentProfile();
+	const tickets = await getTicketsByEventId(id);
+	const myTicket = tickets?.find((ticket) => ticket.user._id === profile?.id);
 
-	if (!profile) {
-		return (
-			<div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8'>
-				<div className='space-y-4'>
-					<h1 className='text-3xl font-bold'>{event.title}</h1>
-				</div>
-			</div>
-		);
+	if (!profile) notFound();
+	if (!event) notFound();
+
+	if (event.status === 'past' || event.status === 'cancelled') {
+		redirect(`/event/${id}`);
+	}
+
+	if (myTicket) {
+		redirect(`/event/${id}`);
 	}
 
 	return (

@@ -12,17 +12,20 @@ export const getEvents = async (): Promise<IEvent[]> => {
 	}
 };
 
-export const getEventById = async (id: string): Promise<IEvent> => {
+export const getEventById = async (id: string): Promise<IEvent | null> => {
 	try {
 		dbConnect();
 		const event = await Event.findById(id);
 		return replaceMongoIdInObject(event);
 	} catch (error) {
-		throw error;
+		console.error(error);
+		return null;
 	}
 };
 
-export const getEventByUserId = async (userId: string): Promise<IEvent[]> => {
+export const getEventByUserId = async (
+	userId: string,
+): Promise<IEvent[] | null> => {
 	try {
 		dbConnect();
 		const events = await Event.find({
@@ -30,6 +33,7 @@ export const getEventByUserId = async (userId: string): Promise<IEvent[]> => {
 		});
 		return events.map((event) => replaceMongoIdInObject(event));
 	} catch (error) {
-		throw error;
+		console.error(error);
+		return null;
 	}
 };

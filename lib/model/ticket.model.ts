@@ -1,8 +1,10 @@
 import mongoose, { Document, Schema } from 'mongoose';
+import { IEvent } from './event.model';
+import { IUser } from './user.model';
 
 export interface ITicket extends Document {
-	event: mongoose.Types.ObjectId;
-	user: mongoose.Types.ObjectId;
+	event: IEvent;
+	user: IUser;
 	ticketId: string;
 	status: 'active' | 'used' | 'cancelled';
 	purchaseDate: Date;

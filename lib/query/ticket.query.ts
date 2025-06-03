@@ -1,12 +1,53 @@
 'use server';
 
 import { dbConnect } from '../db';
-import { Ticket } from '../model/ticket.model';
-import { replaceMongoIdInObject } from '../utils/objectfix';
+import { ITicket, Ticket } from '../model/ticket.model';
+import {
+	replaceMongoIdInArray,
+	replaceMongoIdInObject,
+} from '../utils/objectfix';
 
-export const getTicketByTicketId = async (ticketId: string) => {
-	dbConnect();
-	const ticket = await Ticket.findOne({ ticketId });
+export const getTicketByTicketId = async (
+	ticketId: string,
+): Promise<ITicket | null> => {
+	try {
+		dbConnect();
+		const ticket = await Ticket.findOne({ ticketId });
+		return replaceMongoIdInObject(ticket);
+	} catch (error) {
+		console.error(error);
+		return null;
+	}
+};
 
-	return replaceMongoIdInObject(ticket);
+export const getTicketsByUserId = async (
+	userId: string,
+): Promise<ITicket[] | null> => {
+	try {
+		dbConnect();
+		const tickets = await Ticket.find({ user: userId }).populate(
+			'event',
+			'title location date',
+		);
+		return replaceMongoIdInArray(tickets);
+	} catch (error) {
+		console.error(error);
+		return null;
+	}
+};
+
+export const getTicketsByEventId = async (
+	eventId: string,
+): Promise<ITicket[] | null> => {
+	try {
+		dbConnect();
+		const tickets = await Ticket.find({ event: eventId }).populate(
+			'user',
+			'_id',
+		);
+		return replaceMongoIdInArray(tickets);
+	} catch (error) {
+		console.error(error);
+		return null;
+	}
 };

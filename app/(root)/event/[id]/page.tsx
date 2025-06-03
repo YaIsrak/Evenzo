@@ -2,11 +2,17 @@ import ReviewList from '@/components/ReviewList';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
+import { Skeleton } from '@/components/ui/skeleton';
+import { IEvent } from '@/lib/model/event.model';
 import { getEventById } from '@/lib/query/event.query';
+import { getTicketsByEventId } from '@/lib/query/ticket.query';
+import { getCurrentProfile } from '@/lib/query/user.query';
 import { getStatusColor } from '@/lib/utils/getStatusColor';
 import { CalendarIcon, DollarSignIcon, MapPinIcon } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { notFound } from 'next/navigation';
+import { Suspense } from 'react';
 
 export default async function EventPage({
 	params,
@@ -15,6 +21,8 @@ export default async function EventPage({
 }) {
 	const { id } = await params;
 	const event = await getEventById(id);
+
+	if (!event) notFound();
 
 	return (
 		<div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8'>
@@ -104,41 +112,9 @@ export default async function EventPage({
 					</div>
 				</div>
 
-				<div className='space-y-6'>
-					<Card className='p-6'>
-						<h3 className='text-xl font-semibold mb-4'>Join Event</h3>
-						<div className='space-y-4'>
-							<div>
-								<p className='text-sm font-medium'>Date & Time</p>
-								<p className='text-sm text-muted-foreground'>
-									{new Date(event.date).toLocaleDateString('en-US', {
-										month: 'long',
-										day: 'numeric',
-										year: 'numeric',
-									})}
-									{event.time}
-								</p>
-							</div>
-							<div>
-								<p className='text-sm font-medium'>Location</p>
-								<p className='text-sm text-muted-foreground'>
-									{event.location}
-								</p>
-							</div>
-							<div>
-								<p className='text-sm font-medium'>Price</p>
-								<p className='text-sm text-muted-foreground'>
-									Free for All
-								</p>
-							</div>
-							<Button
-								className='w-full'
-								asChild>
-								<Link href={`/event/${event.id}/join`}>Join Event</Link>
-							</Button>
-						</div>
-					</Card>
-				</div>
+				<Suspense fallback={<EventDetailsSkeleton />}>
+					<JoinButtonCard event={event} />
+				</Suspense>
 			</div>
 
 			{/* Reviews Section */}
@@ -146,6 +122,83 @@ export default async function EventPage({
 				<h2 className='text-2xl font-semibold'>Reviews</h2>
 				<ReviewList />
 			</div>
+		</div>
+	);
+}
+
+async function JoinButtonCard({ event }: { event: IEvent }) {
+	const profile = await getCurrentProfile();
+	const tickets = await getTicketsByEventId(event.id);
+	const myTicket = tickets?.find((ticket) => ticket.user._id === profile?.id);
+
+	return (
+		<div className='space-y-6'>
+			<Card className='p-6'>
+				<h3 className='text-xl font-semibold mb-4'>Join Event</h3>
+				<div className='space-y-4'>
+					<div>
+						<p className='text-sm font-medium'>Date & Time</p>
+						<p className='text-sm text-muted-foreground'>
+							{new Date(event.date).toLocaleDateString('en-US', {
+								month: 'long',
+								day: 'numeric',
+								year: 'numeric',
+							})}
+							{event.time}
+						</p>
+					</div>
+					<div>
+						<p className='text-sm font-medium'>Location</p>
+						<p className='text-sm text-muted-foreground'>
+							{event.location}
+						</p>
+					</div>
+					<div>
+						<p className='text-sm font-medium'>Price</p>
+						<p className='text-sm text-muted-foreground'>Free for All</p>
+					</div>
+
+					{myTicket ? (
+						<Button
+							className='w-full'
+							variant='success'
+							asChild>
+							<Link href={`/tickets/${myTicket.ticketId}`}>
+								View Ticket
+							</Link>
+						</Button>
+					) : (
+						<Button
+							className='w-full'
+							asChild>
+							<Link href={`/event/${event.id}/join`}>Join Event</Link>
+						</Button>
+					)}
+				</div>
+			</Card>
+		</div>
+	);
+}
+
+function EventDetailsSkeleton() {
+	return (
+		<div className='space-y-6'>
+			<Card className='p-6'>
+				<Skeleton className='w-full h-10' />
+				<div className='space-y-4'>
+					<div>
+						<Skeleton className='w-full h-10' />
+					</div>
+					<div>
+						<Skeleton className='w-full h-10' />
+					</div>
+					<div>
+						<Skeleton className='w-full h-10' />
+					</div>
+
+					<Skeleton className='w-full h-10' />
+				</div>
+			</Card>
 		</div>
 	);
 }
