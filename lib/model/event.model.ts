@@ -77,7 +77,7 @@ const eventSchema = new Schema<IEvent>(
 	},
 );
 
-// event will be past when event is over
+// event status will be past when event is over
 eventSchema.pre('updateOne', async function (next) {
 	const update = this.getUpdate() as any;
 	if (update?.status === 'past') {
@@ -86,6 +86,5 @@ eventSchema.pre('updateOne', async function (next) {
 	next();
 });
 
-// Prevent model redefinition in Next.js
 export const Event =
 	mongoose.models.Event || mongoose.model<IEvent>('Event', eventSchema);

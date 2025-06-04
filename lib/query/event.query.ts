@@ -6,6 +6,14 @@ export const getEvents = async (): Promise<IEvent[]> => {
 	try {
 		dbConnect();
 		const events = await Event.find().sort({ date: 1 });
+
+		// update status to past if event is past
+		const now = new Date();
+		await Event.updateMany(
+			{ date: { $lte: now } },
+			{ $set: { status: 'past' } },
+		);
+
 		return events.map((event) => replaceMongoIdInObject(event));
 	} catch (error) {
 		throw error;

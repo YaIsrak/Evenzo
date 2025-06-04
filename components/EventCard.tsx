@@ -9,6 +9,7 @@ import {
 	CheckIcon,
 	ClockIcon,
 	DollarSignIcon,
+	EyeIcon,
 	MapPinIcon,
 	PlusIcon,
 	TicketIcon,
@@ -103,7 +104,11 @@ async function JoinButton({ event }: { event: IEvent }) {
 								? `/event/${event.id}`
 								: `/event/${event.id}/join`
 						}>
-						<PlusIcon className='size-4' />
+						{event.status === 'past' ? (
+							<EyeIcon className='size-4' />
+						) : (
+							<PlusIcon className='size-4' />
+						)}
 						{event.status === 'past' ? 'View' : 'Join Event'}
 					</Link>
 				</Button>
