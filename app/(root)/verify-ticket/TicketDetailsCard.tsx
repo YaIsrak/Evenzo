@@ -1,26 +1,39 @@
 'use client';
 
+import QrCodeImage from '@/components/QrCodeImage';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
+import { Skeleton } from '@/components/ui/skeleton';
 import { ITicket } from '@/lib/model/ticket.model';
+import { Suspense } from 'react';
 
 export default function TicketDetailsCard({ ticket }: { ticket: ITicket }) {
 	return (
-		<Card className='p-6'>
-			<div className='space-y-6'>
+		<Card className='p-6 mx-auto shadow-lg'>
+			<div className='space-y-4'>
+				{/* Header */}
 				<div className='flex items-center justify-between'>
-					<h2 className='text-xl font-semibold'>Ticket Information</h2>
-					<span className='px-3 py-1 text-sm font-medium bg-green-100 text-green-800 rounded-full'>
+					<h2 className='text-2xl font-bold'>Ticket Information</h2>
+					<span className='px-3 py-1 text-sm font-semibold rounded-full bg-green-100 text-green-800'>
 						Valid
 					</span>
 				</div>
 
+				<Separator />
+
+				{/* QR Code */}
+				<div className='h-56'>
+					<Suspense fallback={<Skeleton className='w-full h-full' />}>
+						<QrCodeImage text={`${ticket.ticketId}`} />
+					</Suspense>
+				</div>
+
+				<Separator />
+
 				{/* Ticket Details */}
-				<div className='space-y-4'>
-					<h3 className='text-sm font-medium text-muted-foreground'>
-						Ticket Details
-					</h3>
+				<div>
+					<h3 className='text-lg font-semibold mb-2'>Ticket Details</h3>
 					<div className='grid gap-4 sm:grid-cols-2'>
 						<div>
 							<p className='text-sm font-medium'>Ticket ID</p>
@@ -54,11 +67,11 @@ export default function TicketDetailsCard({ ticket }: { ticket: ITicket }) {
 					</div>
 				</div>
 
+				<Separator />
+
 				{/* Event Details */}
-				<div className='space-y-4'>
-					<h3 className='text-sm font-medium text-muted-foreground'>
-						Event Details
-					</h3>
+				<div>
+					<h3 className='text-lg font-semibold mb-2'>Event Details</h3>
 					<div className='grid gap-4 sm:grid-cols-2'>
 						<div>
 							<p className='text-sm font-medium'>Event Name</p>
@@ -75,14 +88,13 @@ export default function TicketDetailsCard({ ticket }: { ticket: ITicket }) {
 						<div>
 							<p className='text-sm font-medium'>Date & Time</p>
 							<p className='text-sm text-muted-foreground'>
-								{new Date(ticket.event.date).toLocaleDateString(
-									'en-US',
-									{
-										year: 'numeric',
-										month: 'long',
-										day: 'numeric',
-									},
-								)}
+								{new Date(ticket.event.date).toLocaleString('en-US', {
+									year: 'numeric',
+									month: 'long',
+									day: 'numeric',
+									hour: '2-digit',
+									minute: '2-digit',
+								})}
 							</p>
 						</div>
 						<div>
@@ -94,9 +106,11 @@ export default function TicketDetailsCard({ ticket }: { ticket: ITicket }) {
 					</div>
 				</div>
 
+				<Separator />
+
 				{/* Attendee Information */}
-				<div className='space-y-4'>
-					<h3 className='text-sm font-medium text-muted-foreground'>
+				<div>
+					<h3 className='text-lg font-semibold mb-2'>
 						Attendee Information
 					</h3>
 					<div className='grid gap-4 sm:grid-cols-2'>
@@ -123,53 +137,58 @@ export default function TicketDetailsCard({ ticket }: { ticket: ITicket }) {
 					</div>
 				</div>
 
-				<Separator className='my-4' />
+				<Separator />
 
 				{/* Additional Information */}
-				<div className='space-y-4'>
-					<h3 className='text-sm font-medium text-muted-foreground'>
-						Additional Information
-					</h3>
-					<div className='grid gap-4 sm:grid-cols-2'>
-						{ticket.seatNumber && (
-							<div>
-								<p className='text-sm font-medium'>Seat Number</p>
-								<p className='text-sm text-muted-foreground'>
-									{ticket.seatNumber}
-								</p>
-							</div>
-						)}
-						{ticket.accessLevel && (
-							<div>
-								<p className='text-sm font-medium'>Access Level</p>
-								<p className='text-sm text-muted-foreground'>
-									{ticket.accessLevel}
-								</p>
-							</div>
-						)}
-						{ticket.specialRequirements && (
-							<div>
-								<p className='text-sm font-medium'>
-									Special Requirements
-								</p>
-								<p className='text-sm text-muted-foreground'>
-									{ticket.specialRequirements}
-								</p>
-							</div>
-						)}
-						{ticket.notes && (
-							<div>
-								<p className='text-sm font-medium'>Notes</p>
-								<p className='text-sm text-muted-foreground'>
-									{ticket.notes}
-								</p>
-							</div>
-						)}
+				{(ticket.seatNumber ||
+					ticket.accessLevel ||
+					ticket.specialRequirements ||
+					ticket.notes) && (
+					<div>
+						<h3 className='text-lg font-semibold mb-2'>
+							Additional Information
+						</h3>
+						<div className='grid gap-4 sm:grid-cols-2'>
+							{ticket.seatNumber && (
+								<div>
+									<p className='text-sm font-medium'>Seat Number</p>
+									<p className='text-sm text-muted-foreground'>
+										{ticket.seatNumber}
+									</p>
+								</div>
+							)}
+							{ticket.accessLevel && (
+								<div>
+									<p className='text-sm font-medium'>Access Level</p>
+									<p className='text-sm text-muted-foreground'>
+										{ticket.accessLevel}
+									</p>
+								</div>
+							)}
+							{ticket.specialRequirements && (
+								<div>
+									<p className='text-sm font-medium'>
+										Special Requirements
+									</p>
+									<p className='text-sm text-muted-foreground'>
+										{ticket.specialRequirements}
+									</p>
+								</div>
+							)}
+							{ticket.notes && (
+								<div>
+									<p className='text-sm font-medium'>Notes</p>
+									<p className='text-sm text-muted-foreground'>
+										{ticket.notes}
+									</p>
+								</div>
+							)}
+						</div>
 					</div>
-				</div>
+				)}
 
 				{/* Actions */}
-				<div className='flex justify-end gap-4 pt-4 border-t'>
+				<div className='flex flex-col sm:flex-row justify-end gap-4 pt-4 border-t'>
 					<Button
 						variant='outline'
 						size='sm'>

@@ -1,9 +1,9 @@
+import QrCodeImage from '@/components/QrCodeImage';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
-import { getEventById } from '@/lib/query/event.query';
+import { Skeleton } from '@/components/ui/skeleton';
 import { getTicketByTicketId } from '@/lib/query/ticket.query';
-import { getUserById } from '@/lib/query/user.query';
 import {
 	CalendarIcon,
 	ExternalLinkIcon,
@@ -12,6 +12,7 @@ import {
 } from 'lucide-react';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
+import { Suspense } from 'react';
 import DownloadButton from './DownloadButton';
 import ShareButton from './ShareButton';
 
@@ -22,8 +23,6 @@ export default async function TicketDetailsPage({
 }) {
 	const { id } = await params;
 	const ticket = await getTicketByTicketId(id);
-	const event = await getEventById(ticket.event);
-	const user = await getUserById(ticket.user);
 
 	if (!ticket) {
 		return notFound();
@@ -71,13 +70,20 @@ export default async function TicketDetailsPage({
 							<div>
 								<p className='text-sm font-medium'>Ticket Type</p>
 								<p className='text-sm text-muted-foreground'>
-									{/* {ticket.accessLevel} */}
+									{ticket.accessLevel}
 								</p>
 							</div>
 							<div>
 								<p className='text-sm font-medium'>Purchase Date</p>
 								<p className='text-sm text-muted-foreground'>
-									{ticket.purchaseDate}
+									{new Date(ticket.purchaseDate).toLocaleDateString(
+										'en-US',
+										{
+											month: 'long',
+											day: 'numeric',
+											year: 'numeric',
+										},
+									)}
 								</p>
 							</div>
 							<div>
@@ -100,7 +106,7 @@ export default async function TicketDetailsPage({
 								variant='outline'
 								size='sm'
 								asChild>
-								<Link href={`/event/${ticket.event}`}>
+								<Link href={`/event/${ticket.event._id}`}>
 									<ExternalLinkIcon className='mr-2 h-4 w-4' />
 									View Event
 								</Link>
@@ -108,28 +114,31 @@ export default async function TicketDetailsPage({
 						</div>
 						<div className='space-y-4'>
 							<div>
-								<h3 className='text-lg font-medium'>{event.title}</h3>
+								<h3 className='text-lg font-medium'>
+									{ticket.event.title}
+								</h3>
 								<p className='text-sm text-muted-foreground'>
-									{event.category}
+									{ticket.event.category}
 								</p>
 							</div>
 							<div className='grid gap-4 sm:grid-cols-2'>
 								<div>
 									<p className='text-sm font-medium'>Date & Time</p>
 									<p className='text-sm text-muted-foreground'>
-										{new Date(event.date).toLocaleDateString()} •{' '}
-										{new Date(event.time).toLocaleTimeString()}
+										{new Date(ticket.event.date).toLocaleDateString()}{' '}
+										•{' '}
+										{new Date(ticket.event.time).toLocaleTimeString()}
 									</p>
 								</div>
 								<div>
 									<p className='text-sm font-medium'>Location</p>
 									<p className='text-sm text-muted-foreground'>
-										{event.location}
+										{ticket.event.location}
 									</p>
 								</div>
 							</div>
 							<p className='text-sm text-muted-foreground whitespace-pre-wrap'>
-								{event.description}
+								{ticket.event.description}
 							</p>
 						</div>
 					</Card>
@@ -143,19 +152,19 @@ export default async function TicketDetailsPage({
 							<div>
 								<p className='text-sm font-medium'>Full Name</p>
 								<p className='text-sm text-muted-foreground'>
-									{user?.name}
+									{ticket?.user.name}
 								</p>
 							</div>
 							<div>
 								<p className='text-sm font-medium'>Email</p>
 								<p className='text-sm text-muted-foreground'>
-									{user?.email}
+									{ticket?.user.email}
 								</p>
 							</div>
 							<div>
 								<p className='text-sm font-medium'>Phone</p>
 								<p className='text-sm text-muted-foreground'>
-									{user?.phone}
+									{ticket?.user?.phone}
 								</p>
 							</div>
 						</div>
@@ -167,6 +176,12 @@ export default async function TicketDetailsPage({
 					{/* Quick Actions */}
 					<Card className='p-6'>
 						<h2 className='text-xl font-semibold mb-4'>Quick Actions</h2>
+
+						<Suspense
+							fallback={<Skeleton className='w-full aspect-square' />}>
+							<QrCodeImage text={`${ticket.ticketId}`} />
+						</Suspense>
+
 						<div className='space-y-2'>
 							<DownloadButton className='w-full justify-start' />
 							<ShareButton className='w-full justify-start' />
@@ -176,7 +191,7 @@ export default async function TicketDetailsPage({
 								variant='outline'
 								asChild>
 								<Link
-									href={`https://maps.google.com/?q=${event.location}`}
+									href={`https://maps.google.com/?q=${ticket.event.location}`}
 									target='_blank'>
 									<MapPinIcon className='mr-2 h-4 w-4' />
 									View Venue
