@@ -1,3 +1,4 @@
+import Header from '@/components/layout/Header';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { IUser } from '@/lib/model/user.model';
@@ -14,12 +15,10 @@ export default async function DashboardPage() {
 	return (
 		<div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8'>
 			<div className='flex items-center justify-between'>
-				<div>
-					<h1 className='text-3xl font-bold tracking-tight'>My Events</h1>
-					<p className='text-muted-foreground mt-2'>
-						Manage your created events and track their performance
-					</p>
-				</div>
+				<Header
+					title='Dashboard'
+					description='View and manage your events'
+				/>
 				<Button asChild>
 					<Link href='/create'>
 						<PlusIcon className='mr-2 h-4 w-4' />
@@ -29,7 +28,7 @@ export default async function DashboardPage() {
 			</div>
 
 			<div className='grid gap-6 md:grid-cols-2 lg:grid-cols-3'>
-				{events.map((event) => (
+				{events?.map((event) => (
 					<EventCard
 						key={event.id}
 						event={event}
@@ -38,7 +37,7 @@ export default async function DashboardPage() {
 				))}
 			</div>
 
-			{events.length === 0 && (
+			{events && events.length === 0 && (
 				<Card>
 					<CardContent className='flex flex-col items-center justify-center py-12 text-center'>
 						<PlusIcon className='h-12 w-12 text-muted-foreground mb-4' />

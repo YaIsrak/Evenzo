@@ -1,3 +1,4 @@
+import Header from '@/components/layout/Header';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { getTicketsByUserId } from '@/lib/query/ticket.query';
@@ -13,12 +14,10 @@ export default async function TicketsPage() {
 	return (
 		<div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8'>
 			<div className='flex items-center justify-between'>
-				<div>
-					<h1 className='text-3xl font-bold tracking-tight'>My Tickets</h1>
-					<p className='text-muted-foreground mt-2'>
-						View and manage your event tickets
-					</p>
-				</div>
+				<Header
+					title='My Tickets'
+					description='View and manage your event tickets'
+				/>
 				<Button
 					asChild
 					size='sm'>

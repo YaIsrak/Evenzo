@@ -1,3 +1,4 @@
+import Header from '@/components/layout/Header';
 import { Card } from '@/components/ui/card';
 import { getEventById } from '@/lib/query/event.query';
 import { getTicketsByEventId } from '@/lib/query/ticket.query';
@@ -31,12 +32,10 @@ export default async function EventJoinPage({
 
 	return (
 		<div className='max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8'>
-			<div className='space-y-2'>
-				<h1 className='text-3xl font-bold'>Join {event.title}</h1>
-				<p className='text-muted-foreground'>
-					Complete the form below to register for the event
-				</p>
-			</div>
+			<Header
+				title={`Join ${event.title}`}
+				description='Complete the form below to register for the event'
+			/>
 
 			{/* Event Details Summary */}
 			<Card className='p-6'>

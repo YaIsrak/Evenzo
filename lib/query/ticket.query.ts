@@ -12,7 +12,9 @@ export const getTicketByTicketId = async (
 ): Promise<ITicket | null> => {
 	try {
 		dbConnect();
-		const ticket = await Ticket.findOne({ ticketId });
+		const ticket = await Ticket.findOne({ ticketId })
+			.populate('event')
+			.populate('user');
 		return replaceMongoIdInObject(ticket);
 	} catch (error) {
 		console.error(error);

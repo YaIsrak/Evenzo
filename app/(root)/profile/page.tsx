@@ -1,3 +1,4 @@
+import Header from '@/components/layout/Header';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
@@ -15,13 +16,10 @@ export default async function ProfilePage() {
 
 	return (
 		<main className='max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8'>
-			{/* Header */}
-			<div className='space-y-1'>
-				<h1 className='text-3xl font-bold'>Profile Settings</h1>
-				<p className='text-muted-foreground'>
-					Manage your account settings and organization details
-				</p>
-			</div>
+			<Header
+				title='Profile Settings'
+				description='Manage your account settings and organization details'
+			/>
 
 			{/* <pre>{JSON.stringify(profile, null, 2)}</pre> */}
 			{/* Main Content */}

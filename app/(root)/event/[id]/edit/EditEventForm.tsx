@@ -54,7 +54,6 @@ export default function EditEventForm({
 	profile: IUser;
 }) {
 	const [images, setImages] = useState<string[]>(event.images || []);
-	const [isUploading, setIsUploading] = useState(false);
 	const router = useRouter();
 
 	const form = useForm<EventFormValues>({
