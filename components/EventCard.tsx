@@ -87,7 +87,8 @@ export default function EventCard({ event }: { event: IEvent }) {
 async function JoinButton({ event }: { event: IEvent }) {
 	const profile = await getCurrentProfile();
 	const tickets = await getTicketsByEventId(event.id);
-	const myTicket = tickets?.find((ticket) => ticket.user._id === profile?.id);
+	const myTicket =
+		tickets?.find((ticket) => ticket.user._id === profile?.id) || null;
 
 	return (
 		<div className='gap-2 w-full cursor-pointer'>

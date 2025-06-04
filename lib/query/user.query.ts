@@ -23,6 +23,7 @@ export const getCurrentProfile = async (): Promise<IUser | null> => {
 		});
 		const user = session?.user;
 
+		if (!user?.id) return null;
 		const profile = await getUserById(user?.id as string);
 
 		return profile;

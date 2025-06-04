@@ -1,11 +1,14 @@
 import { dbConnect } from '../db';
 import { Event, IEvent } from '../model/event.model';
-import { replaceMongoIdInObject } from '../utils/objectfix';
+import {
+	replaceMongoIdInArray,
+	replaceMongoIdInObject,
+} from '../utils/objectfix';
 
 export const getEvents = async (): Promise<IEvent[]> => {
 	try {
 		dbConnect();
-		const events = await Event.find().sort({ date: 1 });
+		const events = await Event.find().sort({ date: -1 });
 
 		// update status to past if event is past
 		const now = new Date();
@@ -14,7 +17,7 @@ export const getEvents = async (): Promise<IEvent[]> => {
 			{ $set: { status: 'past' } },
 		);
 
-		return events.map((event) => replaceMongoIdInObject(event));
+		return replaceMongoIdInArray(events);
 	} catch (error) {
 		throw error;
 	}
