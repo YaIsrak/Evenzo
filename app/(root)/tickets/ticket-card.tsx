@@ -1,3 +1,4 @@
+import DownloadTicket from '@/components/download-ticket';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
@@ -12,7 +13,6 @@ import { ITicket } from '@/lib/model/ticket.model';
 import { getStatusColor } from '@/lib/utils/getStatusColor';
 import {
 	CalendarIcon,
-	DownloadIcon,
 	ExternalLinkIcon,
 	MapPinIcon,
 	TicketIcon,
@@ -74,10 +74,12 @@ export default function TicketCard({ ticket }: { ticket: ITicket }) {
 						Event
 					</Link>
 				</Button>
-				<Button className='flex-1'>
-					<DownloadIcon />
-					Download
-				</Button>
+				<DownloadTicket
+					ticket={ticket}
+					className='flex-1 justify-center'
+					variant={'default'}
+					label='Download'
+				/>
 			</CardFooter>
 		</Card>
 	);

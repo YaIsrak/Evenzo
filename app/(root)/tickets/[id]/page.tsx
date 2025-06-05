@@ -1,3 +1,4 @@
+import DownloadTicket from '@/components/download-ticket';
 import QrCodeImage from '@/components/QrCodeImage';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
@@ -13,7 +14,6 @@ import {
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { Suspense } from 'react';
-import DownloadButton from './DownloadButton';
 import ShareButton from './ShareButton';
 
 export default async function TicketDetailsPage({
@@ -39,7 +39,10 @@ export default async function TicketDetailsPage({
 					</p>
 				</div>
 				<div className='flex gap-2'>
-					<DownloadButton />
+					<DownloadTicket
+						ticket={ticket}
+						className='w-auto'
+					/>
 					<ShareButton />
 				</div>
 			</div>
@@ -183,7 +186,7 @@ export default async function TicketDetailsPage({
 						</Suspense>
 
 						<div className='space-y-2'>
-							<DownloadButton className='w-full justify-start' />
+							<DownloadTicket ticket={ticket} />
 							<ShareButton className='w-full justify-start' />
 
 							<Button

@@ -1,5 +1,6 @@
 'use client';
 
+import DownloadTicket from '@/components/download-ticket';
 import QrCodeImage from '@/components/QrCodeImage';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
@@ -189,11 +190,7 @@ export default function TicketDetailsCard({ ticket }: { ticket: ITicket }) {
 
 				{/* Actions */}
 				<div className='flex flex-col sm:flex-row justify-end gap-4 pt-4 border-t'>
-					<Button
-						variant='outline'
-						size='sm'>
-						Download Ticket
-					</Button>
+					<DownloadTicket ticket={ticket} />
 					<Button
 						variant='outline'
 						size='sm'>
