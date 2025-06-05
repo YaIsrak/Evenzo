@@ -43,7 +43,7 @@ export default function EventJoinForm({
 
 	async function onSubmit(values: JoinFormValues) {
 		try {
-			const ticket = await createTicket(event.id, profile.id);
+			const ticket = await createTicket(event.id, profile.id, values.email);
 			toast.success('Ticket created successfully');
 
 			router.push(`/tickets/${ticket.ticketId}`);
