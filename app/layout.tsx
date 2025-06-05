@@ -29,7 +29,6 @@ export default function RootLayout({
 				suppressHydrationWarning>
 				<NuqsAdapter>
 					{children}
-
 					<Toaster />
 				</NuqsAdapter>
 			</body>

@@ -16,14 +16,12 @@ import { useState } from 'react';
 import { toast } from 'sonner';
 
 interface ImageUploadProps {
-	images: string[];
 	setImages: React.Dispatch<React.SetStateAction<string[]>>;
 	isUploading: boolean;
 	setIsUploading: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export default function ImageUpload({
-	images,
 	setImages,
 	isUploading,
 	setIsUploading,

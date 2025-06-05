@@ -10,9 +10,11 @@ import {
 } from '@/components/ui/card';
 import { IEvent } from '@/lib/model/event.model';
 import { IUser } from '@/lib/model/user.model';
+import { getTicketCountByEventId } from '@/lib/query/ticket.query';
 import { getStatusColor } from '@/lib/utils/getStatusColor';
 import {
 	CalendarIcon,
+	ChartBarIcon,
 	EditIcon,
 	EyeIcon,
 	MapPinIcon,
@@ -21,7 +23,13 @@ import {
 import Link from 'next/link';
 import CancelEvent from './CancelEvent';
 
-const EventCard = ({ event, profile }: { event: IEvent; profile: IUser }) => {
+export default async function EventCard({
+	event,
+	profile,
+}: {
+	event: IEvent;
+	profile: IUser;
+}) {
 	return (
 		<Card
 			key={event.id}
@@ -54,39 +62,56 @@ const EventCard = ({ event, profile }: { event: IEvent; profile: IUser }) => {
 						<MapPinIcon className='mr-2 h-4 w-4 text-muted-foreground' />
 						<span className='line-clamp-1'>{event.location}</span>
 					</div>
-					<div className='flex items-center text-sm'>
-						<UsersIcon className='mr-2 h-4 w-4 text-muted-foreground' />
-						{/* todo: get attendees count */}
-						<span>{event.capacity} attendees</span>
-					</div>
+					<TicketCount eventId={event.id} />
 				</div>
 			</CardContent>
-			<CardFooter className='flex gap-2'>
+			<CardFooter className='w-full flex flex-col gap-2'>
+				<div className='flex gap-2 w-full'>
+					<Button
+						variant='outline'
+						className='flex-1'
+						asChild>
+						<Link href={`/event/${event.id}`}>
+							<EyeIcon className='h-4 w-4' />
+							View
+						</Link>
+					</Button>
+					<Button
+						variant='outline'
+						className='flex-1'
+						asChild>
+						<Link href={`/event/${event.id}/edit`}>
+							<EditIcon className='h-4 w-4' />
+							Edit
+						</Link>
+					</Button>
+
+					<CancelEvent
+						event={event}
+						profile={profile}
+					/>
+				</div>
 				<Button
 					variant='outline'
-					className='flex-1'
+					className='w-full cursor-pointer'
 					asChild>
-					<Link href={`/event/${event.id}`}>
-						<EyeIcon className='mr-2 h-4 w-4' />
-						View
+					<Link href={`/dashboard/${event.id}/insights`}>
+						<ChartBarIcon className='h-4 w-4' />
+						Insights
 					</Link>
 				</Button>
-				<Button
-					variant='outline'
-					className='flex-1'
-					asChild>
-					<Link href={`/event/${event.id}/edit`}>
-						<EditIcon className='mr-2 h-4 w-4' />
-						Edit
-					</Link>
-				</Button>
-				<CancelEvent
-					event={event}
-					profile={profile}
-				/>
 			</CardFooter>
 		</Card>
 	);
-};
+}
 
-export default EventCard;
+async function TicketCount({ eventId }: { eventId: string }) {
+	const ticketCount = await getTicketCountByEventId(eventId);
+
+	return (
+		<div className='flex items-center text-sm'>
+			<UsersIcon className='mr-2 h-4 w-4 text-muted-foreground' />
+			<span>{ticketCount} attendees</span>
+		</div>
+	);
+}

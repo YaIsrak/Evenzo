@@ -190,7 +190,10 @@ export default function TicketDetailsCard({ ticket }: { ticket: ITicket }) {
 
 				{/* Actions */}
 				<div className='flex flex-col sm:flex-row justify-end gap-4 pt-4 border-t'>
-					<DownloadTicket ticket={ticket} />
+					<DownloadTicket
+						ticket={ticket}
+						className='w-auto'
+					/>
 					<Button
 						variant='outline'
 						size='sm'>

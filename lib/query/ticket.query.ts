@@ -45,11 +45,26 @@ export const getTicketsByEventId = async (
 		dbConnect();
 		const tickets = await Ticket.find({ event: eventId }).populate(
 			'user',
-			'_id',
+			'_id name email',
 		);
 		return replaceMongoIdInArray(tickets);
 	} catch (error) {
 		console.error(error);
 		return null;
+	}
+};
+
+export const getTicketCountByEventId = async (
+	eventId: string,
+): Promise<number> => {
+	try {
+		dbConnect();
+		const ticketCount = await Ticket.countDocuments({
+			event: eventId,
+		});
+		return ticketCount;
+	} catch (error) {
+		console.error(error);
+		return 0;
 	}
 };
