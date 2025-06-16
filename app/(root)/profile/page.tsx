@@ -4,8 +4,20 @@ import { Card } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { getCurrentProfile } from '@/lib/query/user.query';
 import { UserIcon } from 'lucide-react';
+import { Metadata } from 'next';
 import Image from 'next/image';
 import ProfileForm from './profile-form';
+
+export async function generateMetadata(): Promise<Metadata> {
+	const profile = await getCurrentProfile();
+
+	return {
+		title: profile?.name || 'Profile',
+		openGraph: {
+			images: profile?.image || [],
+		},
+	};
+}
 
 export default async function ProfilePage() {
 	const profile = await getCurrentProfile();

@@ -1,5 +1,6 @@
 'use server';
 
+import { revalidatePath } from 'next/cache';
 import { dbConnect } from '../db';
 import { User } from '../model/user.model';
 import { replaceMongoIdInObject } from '../utils/objectfix';
@@ -20,6 +21,7 @@ export const updateUserProfile = async (
 			phone: profile.contact,
 		});
 
+		revalidatePath('/');
 		return replaceMongoIdInObject(updatedUser);
 	} catch (error) {
 		throw error;

@@ -5,10 +5,10 @@ import { getTicketsByEventId } from '@/lib/query/ticket.query';
 import { getCurrentProfile } from '@/lib/query/user.query';
 import { getStatusColor } from '@/lib/utils/getStatusColor';
 import {
+	Aperture,
 	CalendarIcon,
 	CheckIcon,
 	ClockIcon,
-	DollarSignIcon,
 	EyeIcon,
 	MapPinIcon,
 	PlusIcon,
@@ -69,8 +69,8 @@ export default function EventCard({ event }: { event: IEvent }) {
 							<span>{event.location}</span>
 						</div>
 						<div className='flex items-center gap-2'>
-							<DollarSignIcon className='size-4' />
-							<span>Free for All</span>
+							<Aperture className='size-4' />
+							<span>Organizered by {event.organizer.name}</span>
 						</div>
 					</div>
 				</div>

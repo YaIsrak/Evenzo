@@ -8,7 +8,7 @@ import { useState } from 'react';
 export default function SocialLogin({
 	redirectLink,
 }: {
-	redirectLink: string;
+	redirectLink?: string;
 }) {
 	const [loading, setLoading] = useState(false);
 	return (

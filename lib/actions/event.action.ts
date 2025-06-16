@@ -40,6 +40,8 @@ export const createEvent = async ({
 			images: images,
 		});
 
+		revalidatePath('/');
+
 		return replaceMongoIdInObject(newEvent);
 	} catch (error) {
 		throw error;

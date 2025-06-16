@@ -29,7 +29,7 @@ export const getTicketsByUserId = async (
 		dbConnect();
 		const tickets = await Ticket.find({ user: userId }).populate(
 			'event',
-			'title location date',
+			'title location date images',
 		);
 		return replaceMongoIdInArray(tickets);
 	} catch (error) {

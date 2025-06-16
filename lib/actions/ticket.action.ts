@@ -1,10 +1,10 @@
 'use server';
 
+import { revalidatePath } from 'next/cache';
 import { dbConnect } from '../db';
 import { ITicket, Ticket } from '../model/ticket.model';
 import { generateSeatNumber } from '../utils';
 import { replaceMongoIdInObject } from '../utils/objectfix';
-import { sendTicketInvoice } from './mail.action';
 
 // create ticket
 export const createTicket = async (
@@ -21,7 +21,7 @@ export const createTicket = async (
 			accessLevel: 'general',
 		});
 
-		await sendTicketInvoice(email, eventId, ticket.ticketId);
+		revalidatePath('/');
 
 		return replaceMongoIdInObject(ticket);
 	} catch (error) {

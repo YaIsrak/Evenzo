@@ -10,7 +10,10 @@ const inter = DM_Sans({
 });
 
 export const metadata: Metadata = {
-	title: 'Evenzo',
+	title: {
+		template: '%s | Evenzo',
+		default: 'Evenzo',
+	},
 	description: 'A platform for creating and managing events',
 };
 

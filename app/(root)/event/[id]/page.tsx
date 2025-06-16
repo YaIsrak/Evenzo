@@ -8,12 +8,33 @@ import { getEventById } from '@/lib/query/event.query';
 import { getTicketsByEventId } from '@/lib/query/ticket.query';
 import { getCurrentProfile } from '@/lib/query/user.query';
 import { getStatusColor } from '@/lib/utils/getStatusColor';
-import { CalendarIcon, DollarSignIcon, MapPinIcon } from 'lucide-react';
+import { Aperture, CalendarIcon, MapPinIcon } from 'lucide-react';
+import type { Metadata, ResolvingMetadata } from 'next';
 import Image from 'next/image';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { Suspense } from 'react';
 
+type Props = {
+	params: Promise<{ id: string }>;
+};
+
+export async function generateMetadata(
+	{ params }: Props,
+	parent: ResolvingMetadata,
+): Promise<Metadata> {
+	const { id } = await params;
+
+	const event = await getEventById(id);
+
+	return {
+		title: event?.title || 'Event Details',
+		description: event?.description || 'Event Details',
+		openGraph: {
+			images: event?.images || [],
+		},
+	};
+}
 export default async function EventPage({
 	params,
 }: {
@@ -53,8 +74,8 @@ export default async function EventPage({
 						<span>{event.location}</span>
 					</Link>
 					<div className='flex items-center gap-2'>
-						<DollarSignIcon className='size-4' />
-						<span>Free for All</span>
+						<Aperture className='size-4' />
+						<span>Organizered by {event.organizer.name}</span>
 					</div>
 				</div>
 			</div>

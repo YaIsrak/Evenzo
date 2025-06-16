@@ -8,7 +8,7 @@ import {
 export const getEvents = async (): Promise<IEvent[]> => {
 	try {
 		dbConnect();
-		const events = await Event.find().sort({ date: -1 });
+		const events = await Event.find().sort({ date: 1 }).populate('organizer');
 
 		// update status to past if event is past
 		const now = new Date();
@@ -26,7 +26,7 @@ export const getEvents = async (): Promise<IEvent[]> => {
 export const getEventById = async (id: string): Promise<IEvent | null> => {
 	try {
 		dbConnect();
-		const event = await Event.findById(id);
+		const event = await Event.findById(id).populate('organizer');
 		return replaceMongoIdInObject(event);
 	} catch (error) {
 		console.error(error);

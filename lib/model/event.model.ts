@@ -1,4 +1,5 @@
 import mongoose, { Document, Schema } from 'mongoose';
+import { IUser } from './user.model';
 
 export interface IEvent extends Document {
 	title: string;
@@ -7,7 +8,7 @@ export interface IEvent extends Document {
 	date: Date;
 	time: string;
 	location: string;
-	organizer: mongoose.Types.ObjectId;
+	organizer: IUser;
 	category: string;
 	capacity: number;
 	images?: string[];

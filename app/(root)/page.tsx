@@ -1,6 +1,5 @@
 import SignedIn from '@/components/auth/signed-in';
 import EventCard from '@/components/EventCard';
-import EventPagination from '@/components/EventPagination';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { getEvents } from '@/lib/query/event.query';
@@ -28,12 +27,6 @@ export default async function MainPage() {
 			<Suspense fallback={<EventListSkeleton />}>
 				<EventList />
 			</Suspense>
-
-			<EventPagination
-				currentPage={1}
-				totalPages={10}
-				paginationItemsToDisplay={5}
-			/>
 		</div>
 	);
 }
@@ -49,6 +42,12 @@ async function EventList() {
 					event={event}
 				/>
 			))}
+
+			{events.length === 0 && (
+				<div className='col-span-full text-center text-muted-foreground'>
+					No events found.
+				</div>
+			)}
 		</div>
 	);
 }

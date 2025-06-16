@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 
 export default function AuthLayout({
 	children,
@@ -7,7 +7,7 @@ export default function AuthLayout({
 }) {
 	return (
 		<div className='flex h-screen w-screen items-center justify-center'>
-			{children}
+			<Suspense>{children}</Suspense>
 		</div>
 	);
 }

@@ -4,10 +4,6 @@ export const navItems = [
 		href: '/',
 	},
 	{
-		label: 'Events',
-		href: '/events',
-	},
-	{
 		label: 'Verify ticket',
 		href: '/verify-ticket',
 	},

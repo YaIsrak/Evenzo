@@ -17,6 +17,7 @@ import {
 	MapPinIcon,
 	TicketIcon,
 } from 'lucide-react';
+import Image from 'next/image';
 import Link from 'next/link';
 
 export default function TicketCard({ ticket }: { ticket: ITicket }) {
@@ -26,11 +27,23 @@ export default function TicketCard({ ticket }: { ticket: ITicket }) {
 			className='flex flex-col'>
 			<CardHeader>
 				<CardTitle className='line-clamp-1'>{ticket.event.title}</CardTitle>
-				<CardDescription>
+				<CardDescription className='flex flex-col gap-2'>
 					<Badge variant={getStatusColor(ticket.status)}>
 						{ticket.status.charAt(0).toUpperCase() +
 							ticket.status.slice(1)}
 					</Badge>
+					<div>
+						<Image
+							src={
+								ticket?.event.images?.[0] ||
+								'/images/event-placeholder.png'
+							}
+							alt={ticket.event.title}
+							width={300}
+							height={300}
+							className='w-full h-full object-cover rounded-md'
+						/>
+					</div>
 				</CardDescription>
 			</CardHeader>
 			<CardContent className='flex-1 space-y-4'>
