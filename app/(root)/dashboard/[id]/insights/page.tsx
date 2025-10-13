@@ -13,6 +13,7 @@ import { ITicket } from '@/lib/model/ticket.model';
 import { getTicketsByEventId } from '@/lib/query/ticket.query';
 import { getStatusColor } from '@/lib/utils/getStatusColor';
 import { notFound } from 'next/navigation';
+import DownloadCSV from './downloadCSV';
 
 interface InsightPageProps {
 	params: Promise<{ id: string }>;
@@ -26,8 +27,10 @@ export default async function InsightPage({ params }: InsightPageProps) {
 		return notFound();
 	}
 
+	const typedTickets = tickets as ITicket[];
+
 	// Group tickets by purchase date
-	const ticketsByDate = (tickets as ITicket[]).reduce((acc, ticket) => {
+	const ticketsByDate = typedTickets.reduce((acc, ticket) => {
 		const date = new Date(ticket.purchaseDate).toLocaleDateString('en-US', {
 			month: 'short',
 			day: 'numeric',
@@ -86,6 +89,12 @@ export default async function InsightPage({ params }: InsightPageProps) {
 								<CardTitle>Ticket List</CardTitle>
 							</CardHeader>
 							<CardContent>
+								<div className='flex justify-end mb-4'>
+									<DownloadCSV
+										typedTickets={typedTickets}
+										eventId={id}
+									/>
+								</div>
 								<Table>
 									<TableHeader>
 										<TableRow>
