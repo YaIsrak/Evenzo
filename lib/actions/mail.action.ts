@@ -7,12 +7,14 @@ import { ITicket } from '../model/ticket.model';
 const resend = new Resend(process.env.RESEND_API_KEY);
 
 export const sendTicketMail = async (email: string, ticket: ITicket) => {
-	const { error } = await resend.emails.send({
+	const { error, data } = await resend.emails.send({
 		from: 'Evenzo team <contact@yisrak.work>',
 		to: email,
 		subject: 'Your ticket has been purchased',
 		react: TicketTemplate({ ticket }),
 	});
+
+	console.log('ticket created send mail', data?.id);
 
 	if (error) throw new Error(error.message);
 };
