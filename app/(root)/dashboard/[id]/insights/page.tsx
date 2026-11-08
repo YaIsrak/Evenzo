@@ -1,5 +1,6 @@
 import { BarChart } from '@/components/charts/BarChart';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import {
 	Table,
@@ -10,9 +11,13 @@ import {
 	TableRow,
 } from '@/components/ui/table';
 import { ITicket } from '@/lib/model/ticket.model';
+import { getEventById } from '@/lib/query/event.query';
 import { getTicketsByEventId } from '@/lib/query/ticket.query';
+import { getCurrentProfile } from '@/lib/query/user.query';
 import { getStatusColor } from '@/lib/utils/getStatusColor';
-import { notFound } from 'next/navigation';
+import { ArrowLeftIcon, QrCodeIcon, UserCheckIcon } from 'lucide-react';
+import Link from 'next/link';
+import { notFound, redirect } from 'next/navigation';
 import DownloadCSV from './downloadCSV';
 
 interface InsightPageProps {
@@ -21,13 +26,34 @@ interface InsightPageProps {
 
 export default async function InsightPage({ params }: InsightPageProps) {
 	const { id } = await params;
-	const tickets = await getTicketsByEventId(id);
 
-	if (!tickets) {
+	const profile = await getCurrentProfile();
+	if (!profile) {
+		redirect(
+			`/sign-in?redirect=${encodeURIComponent(`/dashboard/${id}/insights`)}`,
+		);
+	}
+
+	const event = await getEventById(id);
+	if (!event) {
 		return notFound();
 	}
 
+	// Verify ownership: only the event organizer can view insights
+	const organizerId =
+		(event.organizer as any)?._id?.toString() ||
+		(event.organizer as any)?.id?.toString() ||
+		event.organizer?.toString();
+	const profileId =
+		profile.id?.toString() || (profile as any)?._id?.toString();
+
+	if (organizerId !== profileId) {
+		redirect('/dashboard');
+	}
+
+	const tickets = (await getTicketsByEventId(id)) || [];
 	const typedTickets = tickets as ITicket[];
+	const checkedInCount = typedTickets.filter((t) => t.status === 'used').length;
 
 	// Group tickets by purchase date
 	const ticketsByDate = typedTickets.reduce((acc, ticket) => {
@@ -60,13 +86,47 @@ export default async function InsightPage({ params }: InsightPageProps) {
 	return (
 		<div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8'>
 			<div className='space-y-6'>
-				<div className='flex items-center justify-between'>
-					<h1 className='text-2xl font-bold'>Event Tickets</h1>
-					<Badge
-						variant='outline'
-						className='text-sm'>
-						{tickets.length} Total Tickets
-					</Badge>
+				<div className='flex flex-col sm:flex-row sm:items-center justify-between gap-4'>
+					<div className='space-y-1'>
+						<div className='flex items-center gap-2'>
+							<Button
+								variant='ghost'
+								size='icon'
+								className='size-8'
+								asChild>
+								<Link href='/dashboard'>
+									<ArrowLeftIcon className='size-4' />
+								</Link>
+							</Button>
+							<h1 className='text-2xl font-bold'>{event.title} - Insights</h1>
+						</div>
+						<p className='text-sm text-muted-foreground ml-10'>
+							Manage attendee registrations and ticket analytics
+						</p>
+					</div>
+
+					<div className='flex flex-wrap items-center gap-2 self-start sm:self-auto'>
+						<Badge
+							variant='outline'
+							className='text-sm'>
+							{tickets.length} / {event.capacity} Registered
+						</Badge>
+						<Badge
+							variant='secondary'
+							className='text-sm bg-blue-100 text-blue-800 dark:bg-blue-950 dark:text-blue-200'>
+							<UserCheckIcon className='size-3 mr-1' />
+							{checkedInCount} / {tickets.length} Checked In
+						</Badge>
+						<Button
+							size='sm'
+							className='gap-1.5'
+							asChild>
+							<Link href='/verify-ticket'>
+								<QrCodeIcon className='size-4' />
+								Live Check-In Scanner
+							</Link>
+						</Button>
+					</div>
 				</div>
 
 				{tickets.length > 0 && (
@@ -86,7 +146,7 @@ export default async function InsightPage({ params }: InsightPageProps) {
 						{/* Tickets Table */}
 						<Card>
 							<CardHeader>
-								<CardTitle>Ticket List</CardTitle>
+								<CardTitle>Attendee List & Check-In Status</CardTitle>
 							</CardHeader>
 							<CardContent>
 								<div className='flex justify-end mb-4'>
@@ -104,36 +164,52 @@ export default async function InsightPage({ params }: InsightPageProps) {
 											<TableHead>Email</TableHead>
 											<TableHead>Status</TableHead>
 											<TableHead>Purchase Date</TableHead>
+											<TableHead>Check-In Time</TableHead>
 										</TableRow>
 									</TableHeader>
 									<TableBody>
-										{(tickets as ITicket[]).map((ticket) => (
+										{typedTickets.map((ticket) => (
 											<TableRow key={ticket.ticketId}>
-												<TableCell className='font-medium'>
+												<TableCell className='font-medium font-mono text-xs'>
 													#{ticket.ticketId}
 												</TableCell>
 												<TableCell>{ticket.seatNumber}</TableCell>
-												<TableCell>{ticket.user.name}</TableCell>
-												<TableCell>{ticket.user.email}</TableCell>
+												<TableCell>{ticket.user?.name || 'N/A'}</TableCell>
+												<TableCell>{ticket.user?.email || 'N/A'}</TableCell>
 												<TableCell>
 													<Badge
 														variant={getStatusColor(
 															ticket.status,
 														)}>
-														{ticket.status
-															.charAt(0)
-															.toUpperCase() +
-															ticket.status.slice(1)}
+														{ticket.status === 'used'
+															? 'Checked In'
+															: ticket.status
+																	.charAt(0)
+																	.toUpperCase() +
+																ticket.status.slice(1)}
 													</Badge>
 												</TableCell>
 												<TableCell>
 													{new Date(
 														ticket.purchaseDate,
 													).toLocaleDateString('en-US', {
-														month: 'long',
+														month: 'short',
 														day: 'numeric',
 														year: 'numeric',
 													})}
+												</TableCell>
+												<TableCell className='text-xs text-muted-foreground'>
+													{ticket.checkedInAt
+														? new Date(
+																ticket.checkedInAt,
+															).toLocaleTimeString(
+																'en-US',
+																{
+																	hour: '2-digit',
+																	minute: '2-digit',
+																},
+															)
+														: '—'}
 												</TableCell>
 											</TableRow>
 										))}

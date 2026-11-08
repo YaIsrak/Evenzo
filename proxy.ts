@@ -1,7 +1,7 @@
 import { getSessionCookie } from 'better-auth/cookies';
 import { NextRequest, NextResponse } from 'next/server';
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
 	const sessionCookie = getSessionCookie(request);
 
 	if (!sessionCookie) {
@@ -19,11 +19,13 @@ export async function middleware(request: NextRequest) {
 
 export const config = {
 	matcher: [
+		'/dashboard',
+		'/dashboard/:path*',
+		'/tickets',
+		'/tickets/:path*',
 		'/event/:id/join',
 		'/event/:id/edit',
-		'/dashboard',
-		'/tickets',
 		'/create',
 		'/profile',
-	], // Only protect the join route
+	],
 };

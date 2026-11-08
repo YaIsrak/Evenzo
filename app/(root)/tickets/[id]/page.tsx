@@ -130,7 +130,7 @@ export default async function TicketDetailsPage({
 									<p className='text-sm text-muted-foreground'>
 										{new Date(ticket.event.date).toLocaleDateString()}{' '}
 										•{' '}
-										{new Date(ticket.event.time).toLocaleTimeString()}
+										ticket.event.time
 									</p>
 								</div>
 								<div>

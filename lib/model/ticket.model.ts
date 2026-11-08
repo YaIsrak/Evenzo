@@ -8,6 +8,7 @@ export interface ITicket extends Document {
 	ticketId: string;
 	status: 'active' | 'used' | 'cancelled';
 	purchaseDate: Date;
+	checkedInAt?: Date;
 	seatNumber: string;
 	accessLevel?: string;
 	specialRequirements?: string;
@@ -40,6 +41,10 @@ const ticketSchema = new Schema<ITicket>(
 		purchaseDate: {
 			type: Date,
 			default: Date.now,
+		},
+		checkedInAt: {
+			type: Date,
+			required: false,
 		},
 		seatNumber: {
 			type: String,

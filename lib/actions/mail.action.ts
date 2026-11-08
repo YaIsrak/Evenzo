@@ -8,7 +8,7 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 
 export const sendTicketMail = async (email: string, ticket: ITicket) => {
 	const { error, data } = await resend.emails.send({
-		from: 'Evenzo team <contact@yisrak.work>',
+		from: 'Evenzo team <onboarding@resend.dev>',
 		to: email,
 		subject: 'Your ticket has been purchased',
 		react: TicketTemplate({ ticket }),

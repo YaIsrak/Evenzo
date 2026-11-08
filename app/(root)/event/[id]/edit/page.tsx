@@ -3,7 +3,7 @@ import { IEvent } from '@/lib/model/event.model';
 import { IUser } from '@/lib/model/user.model';
 import { getEventById } from '@/lib/query/event.query';
 import { getCurrentProfile } from '@/lib/query/user.query';
-import { redirect } from 'next/navigation';
+import { notFound, redirect } from 'next/navigation';
 import EditEventForm from './EditEventForm';
 
 export default async function EventEditPage({
@@ -13,10 +13,23 @@ export default async function EventEditPage({
 }) {
 	const { id } = await params;
 	const event = await getEventById(id);
+	if (!event) {
+		return notFound();
+	}
 
 	const profile = await getCurrentProfile();
+	if (!profile) {
+		redirect(`/sign-in?redirect=${encodeURIComponent(`/event/${id}/edit`)}`);
+	}
 
-	if (event?.organizer.toString() !== profile?.id) {
+	const organizerId =
+		(event.organizer as any)?._id?.toString() ||
+		(event.organizer as any)?.id?.toString() ||
+		event.organizer?.toString();
+	const profileId =
+		profile.id?.toString() || (profile as any)?._id?.toString();
+
+	if (organizerId !== profileId) {
 		redirect('/dashboard');
 	}
 
